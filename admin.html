@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin - ImmoConseil</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore-compat.js"></script>
+    <style>
+        .admin-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .reservation-list {
+            list-style-type: none;
+            padding: 0;
+        }
+        .reservation-item {
+            background-color: #f9f9f9;
+            border: 1px solid #ddd;
+            margin-bottom: 10px;
+            padding: 15px;
+            border-radius: 5px;
+        }
+        .reservation-item h3 {
+            margin-top: 0;
+        }
+        .reservation-actions {
+            margin-top: 10px;
+        }
+        .btn {
+            padding: 5px 10px;
+            border: none;
+            border-radius: 3px;
+            cursor: pointer;
+        }
+        .btn-approve {
+            background-color: #4CAF50;
+            color: white;
+        }
+        .btn-reject {
+            background-color: #f44336;
+            color: white;
+        }
+        #loading-message, #no-reservations-message {
+            text-align: center;
+            margin-top: 20px;
+            font-style: italic;
+        }
+        .message-sent-animation {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: rgba(76, 175, 80, 0.9);
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            display: none;
+            z-index: 1000;
+            animation: fadeInOut 2s ease-in-out;
+        }
+        .rendez-vous-list {
+            list-style-type: none;
+            padding: 0;
+        }
+        .rendez-vous-item {
+            background-color: #f9f9f9;
+            border: 1px solid #ddd;
+            margin-bottom: 10px;
+            padding: 15px;
+            border-radius: 5px;
+        }
+
+        @keyframes fadeInOut {
+            0%, 100% { opacity: 0; }
+            20%, 80% { opacity: 1; }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <nav>
+            <div class="logo">
+                <img src="Vista Logos/logo-transparent-png.png" alt="ImmoConseil Logo">
+            </div>
+            <ul class="nav-menu">
+                <li><a href="index.html">Accueil</a></li>
+                <li><a href="dashboard.html">Tableau de bord</a></li>
+                <li><a href="#" id="logout-btn">Déconnexion</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main class="admin-container">
+        <h1>Gestion des réservations</h1>
+        <div id="loading-message">Chargement des réservations...</div>
+        <div id="no-reservations-message" style="display: none;">Aucune réservation trouvée.</div>
+        <ul id="reservation-list" class="reservation-list">
+            <!-- Les réservations seront ajoutées ici dynamiquement -->
+        </ul>
+
+        <section>
+            <h2>Rendez-vous</h2>
+            <ul id="rendez-vous-list" class="rendez-vous-list">
+                <!-- Les rendez-vous seront ajoutés ici dynamiquement -->
+            </ul>
+        </section>
+    </main>
+
+    <div id="messageSentAnimation" class="message-sent-animation">
+        Message envoyé avec succès !
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-app.js";
+        import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-auth.js";
+        import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyAo--IEnTiD8deRZp5zHIcOR96uyZgJh4s",
+            authDomain: "immoconseil-30825.firebaseapp.com",
+            projectId: "immoconseil-30825",
+            storageBucket: "immoconseil-30825.appspot.com",
+            messagingSenderId: "468039815768",
+            appId: "1:468039815768:web:3d102a3f68f86068d8f02d",
+            measurementId: "G-3N3XRK2SP3"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
+        onAuthStateChanged(auth, (user) => {
+            if (user && user.email === "alfredgibeauahoussinou@gmail.com") {
+                loadReservations();
+                loadRendezVous();
+            } else {
+                window.location.href = "connexion.html";
+            }
+        });
+
+        // Charger les réservations
+        function loadReservations() {
+            const reservationList = document.getElementById('reservation-list');
+            const loadingMessage = document.getElementById('loading-message');
+            const noReservationsMessage = document.getElementById('no-reservations-message');
+
+            db.collection("reservations").get().then((querySnapshot) => {
+                loadingMessage.style.display = 'none';
+                
+                if (querySnapshot.empty) {
+                    noReservationsMessage.style.display = 'block';
+                    return;
+                }
+
+                reservationList.innerHTML = '';
+                querySnapshot.forEach((doc) => {
+                    const reservation = doc.data();
+                    const li = document.createElement('li');
+                    li.className = 'reservation-item';
+                    li.innerHTML = `
+                        <h3>${reservation.type || 'Type non spécifié'} - ${reservation.date || 'Date non spécifiée'}</h3>
+                        <p>Client: ${reservation.clientName || 'Non spécifié'}</p>
+                        <p>Email: ${reservation.clientEmail || 'Non spécifié'}</p>
+                        <p>Détails: ${reservation.details || 'Aucun détail'}</p>
+                        <div class="reservation-actions">
+                            <button class="btn btn-approve" data-id="${doc.id}">Approuver</button>
+                            <button class="btn btn-reject" data-id="${doc.id}">Rejeter</button>
+                        </div>
+                    `;
+                    reservationList.appendChild(li);
+                });
+
+                // Ajouter des écouteurs d'événements pour les boutons
+                document.querySelectorAll('.btn-approve, .btn-reject').forEach(button => {
+                    button.addEventListener('click', handleReservationAction);
+                });
+            }).catch((error) => {
+                console.error("Erreur lors du chargement des réservations:", error);
+                loadingMessage.textContent = `Erreur lors du chargement des réservations: ${error.message}. Veuillez réessayer.`;
+            });
+        }
+
+        // Gérer les actions sur les réservations
+        function handleReservationAction(event) {
+            const reservationId = event.target.getAttribute('data-id');
+            const action = event.target.classList.contains('btn-approve') ? 'approved' : 'rejected';
+
+            db.collection("reservations").doc(reservationId).update({
+                status: action
+            }).then(() => {
+                showMessageSentAnimation(); // Afficher l'animation
+                loadReservations(); // Recharger la liste
+            }).catch((error) => {
+                console.error("Erreur lors de la mise à jour de la réservation:", error);
+                alert("Une erreur s'est produite. Veuillez réessayer.");
+            });
+        }
+
+        // Charger les rendez-vous
+        async function loadRendezVous() {
+            const rendezVousList = document.getElementById('rendez-vous-list');
+            const rendezVousRef = collection(db, "rendez-vous");
+            
+            try {
+                const snapshot = await getDocs(rendezVousRef);
+
+                rendezVousList.innerHTML = '';
+                snapshot.forEach((doc) => {
+                    const rendezVous = doc.data();
+                    const li = document.createElement('li');
+                    li.className = 'rendez-vous-item';
+                    li.innerHTML = `
+                        <h3>${rendezVous.title}</h3>
+                        <p>Début: ${new Date(rendezVous.start).toLocaleString()}</p>
+                        <p>Fin: ${new Date(rendezVous.end).toLocaleString()}</p>
+                        <p>Journée entière: ${rendezVous.allDay ? 'Oui' : 'Non'}</p>
+                    `;
+                    rendezVousList.appendChild(li);
+                });
+            } catch (error) {
+                console.error("Erreur lors du chargement des rendez-vous:", error);
+            }
+        }
+
+        // Gestion de la déconnexion
+        document.getElementById('logout-btn').addEventListener('click', function() {
+            auth.signOut().then(() => {
+                window.location.href = 'connexion.html';
+            }).catch((error) => {
+                console.error("Erreur lors de la déconnexion:", error);
+            });
+        });
+
+        // Fonction pour afficher l'animation de message envoyé
+        function showMessageSentAnimation() {
+            const animation = document.getElementById('messageSentAnimation');
+            animation.style.display = 'block';
+            setTimeout(() => {
+                animation.style.display = 'none';
+            }, 2000);
+        }
+    </script>
+</body>
+</html>

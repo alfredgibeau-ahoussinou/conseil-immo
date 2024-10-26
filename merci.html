@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Merci - ImmoConseil</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header>
+        <nav>
+            <div class="logo">
+                <a href="index.html">
+                    <img src="Vista Logos/logo-transparent-png.png" alt="ImmoConseil Logo">
+                </a>
+            </div>
+            <div class="menu-toggle">☰</div>
+            <ul class="nav-menu">
+                <li><a href="index.html#services">Services</a></li>
+                <li><a href="index.html#proprietes">Propriétés</a></li>
+                <li><a href="index.html#contact">Contact</a></li>
+                <li><a href="connexion.html">Connexion</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <section class="merci-section">
+            <h1>Merci pour votre message !</h1>
+            <p>Nous avons bien reçu votre demande et nous vous répondrons dans les plus brefs délais.</p>
+            <a href="index.html" class="cta-button">Retour à l'accueil</a>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2024 ImmoConseil. Tous droits réservés.</p>
+    </footer>
+
+    <script>
+        document.querySelector('.menu-toggle').addEventListener('click', function() {
+            document.querySelector('.nav-menu').classList.toggle('show');
+            this.textContent = this.textContent === '☰' ? '✕' : '☰';
+        });
+
+        // Fermer le menu lorsqu'un lien est cliqué
+        document.querySelectorAll('.nav-menu a').forEach(link => {
+            link.addEventListener('click', function() {
+                document.querySelector('.nav-menu').classList.remove('show');
+                document.querySelector('.menu-toggle').textContent = '☰';
+            });
+        });
+
+        // Fermer le menu lorsqu'on clique en dehors
+        document.addEventListener('click', function(event) {
+            const nav = document.querySelector('nav');
+            const menuToggle = document.querySelector('.menu-toggle');
+            if (!nav.contains(event.target) && !menuToggle.contains(event.target)) {
+                document.querySelector('.nav-menu').classList.remove('show');
+                menuToggle.textContent = '☰';
+            }
+        });
+    </script>
+</body>
+</html>

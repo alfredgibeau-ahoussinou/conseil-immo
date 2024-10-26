@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Connexion - ImmoConseil</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="connexion.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-auth-compat.js"></script>
+    <script type="module">
+        import { signUp, signIn } from './connexion.js';
+        window.signUp = signUp;
+        window.signIn = signIn;
+    </script>
+    <style>
+        /* ... (styles précédents) ... */
+        .logout-button {
+            background-color: transparent;
+            color: #3498db;
+            border: 2px solid #3498db;
+            padding: 8px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 14px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .logout-button:hover {
+            background-color: #3498db;
+            color: white;
+        }
+
+        .logout-button:active {
+            transform: translateY(1px);
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <nav>
+            <div class="logo">
+                <a href="index.html">
+                    <img src="Vista Logos/logo-transparent-png.png" alt="ImmoConseil Logo">
+                </a>
+            </div>
+            <div class="menu-toggle">☰</div>
+            <ul class="nav-menu">
+                <li><a href="index.html#services">Services</a></li>
+                <li><a href="index.html#proprietes">Propriétés</a></li>
+                <li><a href="index.html#contact">Contact</a></li>
+                <li><a href="connexion.html" class="active">Connexion</a></li>
+            </ul>
+        </nav>
+    </header>
+    
+    <main class="auth-background">
+        <div class="auth-container">
+            <section id="connexion" class="auth-section">
+                <h2>Connexion</h2>
+                <form class="auth-form" id="login-form">
+                    <div class="form-group">
+                        <label for="login-email">Email</label>
+                        <input type="email" id="login-email" name="login-email" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="login-password">Mot de passe</label>
+                        <input type="password" id="login-password" name="login-password" required>
+                    </div>
+                    <button type="submit" class="auth-button">Se connecter</button>
+                </form>
+                <p class="switch-form">Pas de compte ? <a href="#" id="switch-to-signup">S'inscrire</a></p>
+            </section>
+
+            <section id="inscription" class="auth-section" style="display: none;">
+                <h2>Inscription</h2>
+                <form class="auth-form" id="signup-form">
+                    <div class="form-group">
+                        <label for="signup-username">Nom d'utilisateur</label>
+                        <input type="text" id="signup-username" name="signup-username" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="signup-email">Email</label>
+                        <input type="email" id="signup-email" name="signup-email" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="signup-password">Mot de passe</label>
+                        <input type="password" id="signup-password" name="signup-password" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="signup-confirm-password">Confirmer le mot de passe</label>
+                        <input type="password" id="signup-confirm-password" name="signup-confirm-password" required>
+                    </div>
+                    <button type="submit" class="auth-button">S'inscrire</button>
+                </form>
+                <p class="switch-form">Déjà inscrit ? <a href="#" id="switch-to-login">Se connecter</a></p>
+            </section>
+        </div>
+    </main>
+    
+    <footer>
+        <p>&copy; 2024 ImmoConseil. Tous droits réservés.</p>
+    </footer>
+
+    <button id="logout-btn" class="logout-button">Se déconnecter</button>
+
+    <script>
+        document.getElementById('login-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const email = document.getElementById('login-email').value;
+            const password = document.getElementById('login-password').value;
+            window.signIn(email, password);
+        });
+
+        document.getElementById('signup-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const username = document.getElementById('signup-username').value;
+            const email = document.getElementById('signup-email').value;
+            const password = document.getElementById('signup-password').value;
+            const confirmPassword = document.getElementById('signup-confirm-password').value;
+            
+            if (password !== confirmPassword) {
+                alert("Les mots de passe ne correspondent pas.");
+                return;
+            }
+            
+            window.signUp(username, email, password);
+        });
+
+        document.getElementById('switch-to-signup').addEventListener('click', function(e) {
+            e.preventDefault();
+            document.getElementById('connexion').style.display = 'none';
+            document.getElementById('inscription').style.display = 'block';
+        });
+
+        document.getElementById('switch-to-login').addEventListener('click', function(e) {
+            e.preventDefault();
+            document.getElementById('inscription').style.display = 'none';
+            document.getElementById('connexion').style.display = 'block';
+        });
+
+        document.querySelector('.menu-toggle').addEventListener('click', function() {
+            document.querySelector('.nav-menu').classList.toggle('show');
+            this.textContent = this.textContent === '☰' ? '✕' : '☰';
+        });
+
+        // Fermer le menu lorsqu'un lien est cliqué
+        document.querySelectorAll('.nav-menu a').forEach(link => {
+            link.addEventListener('click', function() {
+                document.querySelector('.nav-menu').classList.remove('show');
+                document.querySelector('.menu-toggle').textContent = '☰';
+            });
+        });
+
+        // Fermer le menu lorsqu'on clique en dehors
+        document.addEventListener('click', function(event) {
+            const nav = document.querySelector('nav');
+            const menuToggle = document.querySelector('.menu-toggle');
+            if (!nav.contains(event.target) && !menuToggle.contains(event.target)) {
+                document.querySelector('.nav-menu').classList.remove('show');
+                menuToggle.textContent = '☰';
+            }
+        });
+
+        document.getElementById('logout-btn').addEventListener('click', function() {
+            // Logique de déconnexion ici
+            console.log('Déconnexion');
+            // Rediriger vers la page de connexion après la déconnexion
+            window.location.href = 'connexion.html';
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tableau de bord - ImmoConseil</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="connexion.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore-compat.js"></script>
+    <link href='https://cdn.jsdelivr.net/npm/fullcalendar@5.10.2/main.min.css' rel='stylesheet' />
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            line-height: 1.6;
+            color: #333;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+        .dashboard-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem;
+            background-color: #fff;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .dashboard-title {
+            font-size: 1.5rem;
+            color: #333;
+            margin: 0;
+        }
+        .dashboard-container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1rem;
+        }
+        .dashboard-section {
+            background-color: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            padding: 1.5rem;
+            transition: transform 0.3s ease;
+        }
+        .dashboard-section:hover {
+            transform: translateY(-5px);
+        }
+        #calendar {
+            height: 400px;
+        }
+        .prestation-form {
+            display: flex;
+            flex-direction: column;
+        }
+        .prestation-form input,
+        .prestation-form select,
+        .prestation-form textarea {
+            margin-bottom: 1rem;
+            padding: 0.5rem;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 1rem;
+        }
+        .prestation-form button {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            padding: 0.75rem;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            font-size: 1rem;
+        }
+        .prestation-form button:hover {
+            background-color: #2980b9;
+        }
+        .logout-button {
+            background-color: transparent;
+            color: #3498db;
+            border: 2px solid #3498db;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+        .logout-button:hover {
+            background-color: #3498db;
+            color: white;
+        }
+        .welcome-animation, .goodbye-animation {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background-color: rgba(52, 152, 219, 0.9);
+            color: white;
+            padding: 1rem;
+            border-radius: 5px;
+            text-align: center;
+            display: none;
+            z-index: 1000;
+            animation: slideIn 0.5s ease-out, fadeOut 0.5s ease-in 2.5s;
+        }
+        @keyframes slideIn {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+        @keyframes fadeOut {
+            from { opacity: 1; }
+            to { opacity: 0; }
+        }
+        @media (max-width: 768px) {
+            .dashboard-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            .dashboard-title {
+                margin-bottom: 1rem;
+            }
+            .logout-button {
+                align-self: flex-start;
+            }
+            #calendar {
+                height: 300px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="dashboard-header">
+        <div class="logo">
+            <img src="Vista Logos/logo-transparent-png.png" alt="ImmoConseil Logo" style="height: 40px;">
+        </div>
+        <h1 class="dashboard-title">Tableau de bord</h1>
+        <button id="logoutButton" class="logout-button">Se déconnecter</button>
+    </header>
+
+    <main class="dashboard-container">
+        <div id="welcomeAnimation" class="welcome-animation">
+            <h3>Bienvenue, <span id="userDisplayName"></span></h3>
+            <p>Ravi de vous revoir sur votre espace personnel.</p>
+        </div>
+
+        <section class="dashboard-section">
+            <h2>Agenda</h2>
+            <div id="calendar"></div>
+        </section>
+
+        <section class="dashboard-section">
+            <h2>Demande de prestation</h2>
+            <form id="prestationForm" class="prestation-form">
+                <select id="prestationType" required>
+                    <option value="">Choisissez une prestation</option>
+                    <option value="estimation">Estimation</option>
+                    <option value="visite">Visite</option>
+                    <option value="conseil">Conseil</option>
+                </select>
+                
+                <div id="estimationDetails" style="display:none;">
+                    <input type="number" id="surfaceEstimation" placeholder="Surface (m²)" min="1">
+                    <select id="typeEstimation">
+                        <option value="">Type de bien</option>
+                        <option value="appartement">Appartement</option>
+                        <option value="maison">Maison</option>
+                        <option value="terrain">Terrain</option>
+                    </select>
+                </div>
+                
+                <div id="visiteDetails" style="display:none;">
+                    <input type="text" id="adresseVisite" placeholder="Adresse du bien">
+                    <input type="number" id="nombrePersonnes" placeholder="Nombre de personnes" min="1" value="1">
+                </div>
+                
+                <div id="conseilDetails" style="display:none;">
+                    <select id="typeConseil">
+                        <option value="">Type de conseil</option>
+                        <option value="achat">Achat</option>
+                        <option value="vente">Vente</option>
+                        <option value="location">Location</option>
+                        <option value="investissement">Investissement</option>
+                    </select>
+                </div>
+                
+                <textarea id="eventDescription" placeholder="Description de la demande"></textarea>
+                <button type="submit">Envoyer la demande</button>
+            </form>
+        </section>
+    </main>
+
+    <div id="goodbyeAnimation" class="goodbye-animation">
+        <h3>À bientôt, <span id="userDisplayNameLogout"></span> !</h3>
+        <p>Merci de votre visite.</p>
+    </div>
+
+    <script src='https://cdn.jsdelivr.net/npm/fullcalendar@5.10.2/main.min.js'></script>
+    <script src='https://cdn.jsdelivr.net/npm/fullcalendar@5.10.2/locales-all.min.js'></script>
+
+    <script>
+        // Configuration Firebase
+        const firebaseConfig = {
+            apiKey: "AIzaSyAo--IEnTiD8deRZp5zHIcOR96uyZgJh4s",
+            authDomain: "immoconseil-30825.firebaseapp.com",
+            projectId: "immoconseil-30825",
+            storageBucket: "immoconseil-30825.appspot.com",
+            messagingSenderId: "468039815768",
+            appId: "1:468039815768:web:3d102a3f68f86068d8f02d",
+            measurementId: "G-3N3XRK2SP3"
+        };
+
+        // Initialiser Firebase
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
+        const auth = firebase.auth();
+
+        let calendar;
+        let isAdmin = false;
+
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log("DOM chargé");
+            var calendarEl = document.getElementById('calendar');
+            calendar = new FullCalendar.Calendar(calendarEl, {
+                initialView: 'dayGridMonth',
+                locale: 'fr',
+                headerToolbar: {
+                    left: 'prev,next today',
+                    center: 'title',
+                    right: 'dayGridMonth,timeGridWeek,timeGridDay'
+                },
+                events: [], // Les événements seront chargés dynamiquement
+                selectable: true,
+                select: function(info) {
+                    const title = prompt('Entrez un titre pour votre rendez-vous:');
+                    if (title) {
+                        const event = {
+                            title: title,
+                            start: info.startStr,
+                            end: info.endStr,
+                            allDay: info.allDay
+                        };
+                        calendar.addEvent(event);
+                        
+                        // Enregistrer le rendez-vous dans Firestore
+                        db.collection("rendez-vous").add({
+                            title: event.title,
+                            start: event.start,
+                            end: event.end,
+                            allDay: event.allDay,
+                            userId: auth.currentUser.uid
+                        }).then(() => {
+                            console.log("Rendez-vous enregistré avec succès");
+                        }).catch((error) => {
+                            console.error("Erreur lors de l'enregistrement du rendez-vous:", error);
+                        });
+                    }
+                    calendar.unselect();
+                }
+            });
+            calendar.render();
+        });
+
+        function loadUserRendezVous() {
+            console.log("Chargement des rendez-vous de l'utilisateur");
+            db.collection("rendez-vous").where("userId", "==", auth.currentUser.uid).get()
+                .then((querySnapshot) => {
+                    const events = [];
+                    querySnapshot.forEach((doc) => {
+                        events.push(doc.data());
+                    });
+                    console.log("Rendez-vous chargés:", events);
+                    calendar.addEventSource(events);
+                })
+                .catch((error) => {
+                    console.error("Erreur lors du chargement des rendez-vous:", error);
+                });
+        }
+
+        function loadAllRendezVous() {
+            console.log("Chargement de tous les rendez-vous");
+            db.collection("rendez-vous").get()
+                .then((querySnapshot) => {
+                    const events = [];
+                    querySnapshot.forEach((doc) => {
+                        const event = doc.data();
+                        event.title = `${event.title} (${event.userId})`;
+                        events.push(event);
+                    });
+                    console.log("Tous les rendez-vous chargés:", events);
+                    calendar.addEventSource(events);
+                })
+                .catch((error) => {
+                    console.error("Erreur lors du chargement de tous les rendez-vous:", error);
+                });
+        }
+
+        auth.onAuthStateChanged((user) => {
+            if (user) {
+                console.log("Utilisateur connecté:", user.email);
+                document.getElementById('userDisplayName').textContent = user.displayName || user.email;
+                document.getElementById('userDisplayNameLogout').textContent = user.displayName || user.email;
+                
+                // Vérifier si l'utilisateur est admin
+                isAdmin = user.email === "alfredgibeauahoussinou@gmail.com";
+                console.log("Est admin:", isAdmin);
+                
+                if (isAdmin) {
+                    loadAllRendezVous();
+                } else {
+                    loadUserRendezVous();
+                }
+            } else {
+                console.log("Utilisateur non connecté, redirection vers la page de connexion");
+                window.location.href = 'connexion.html';
+            }
+        });
+
+        function showWelcomeAnimation() {
+            const welcomeAnimation = document.getElementById('welcomeAnimation');
+            welcomeAnimation.style.display = 'block';
+            setTimeout(() => {
+                welcomeAnimation.style.display = 'none';
+            }, 3000);
+        }
+
+        document.getElementById('logoutButton').addEventListener('click', () => {
+            const goodbyeAnimation = document.getElementById('goodbyeAnimation');
+            goodbyeAnimation.style.display = 'block';
+            setTimeout(() => {
+                auth.signOut().then(() => {
+                    window.location.href = 'connexion.html';
+                }).catch((error) => {
+                    console.error('Erreur lors de la déconnexion:', error);
+                });
+            }, 2000);
+        });
+
+        document.getElementById('prestationType').addEventListener('change', function() {
+            document.getElementById('estimationDetails').style.display = 'none';
+            document.getElementById('visiteDetails').style.display = 'none';
+            document.getElementById('conseilDetails').style.display = 'none';
+            
+            if (this.value === 'estimation') {
+                document.getElementById('estimationDetails').style.display = 'block';
+            } else if (this.value === 'visite') {
+                document.getElementById('visiteDetails').style.display = 'block';
+            } else if (this.value === 'conseil') {
+                document.getElementById('conseilDetails').style.display = 'block';
+            }
+        });
+
+        document.getElementById('prestationForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const type = document.getElementById('prestationType').value;
+            let details = {};
+            
+            if (type === 'estimation') {
+                details = {
+                    surface: document.getElementById('surfaceEstimation').value,
+                    typeBien: document.getElementById('typeEstimation').value
+                };
+            } else if (type === 'visite') {
+                details = {
+                    adresse: document.getElementById('adresseVisite').value,
+                    nombrePersonnes: document.getElementById('nombrePersonnes').value
+                };
+            } else if (type === 'conseil') {
+                details = {
+                    typeConseil: document.getElementById('typeConseil').value
+                };
+            }
+            
+            const description = document.getElementById('eventDescription').value;
+            
+            // Envoyer l'email avec les détails de la prestation
+            emailjs.send("service_fim75em", "template_s8afcog", {
+                to_email: "alfredgibeauhoussinou@gmail.com",
+                from_name: "Système de rservation ImmoConseil",
+                type_prestation: type,
+                details: JSON.stringify(details),
+                description: description
+            }).then(function(response) {
+                console.log('SUCCESS!', response.status, response.text);
+                alert('Votre demande de prestation a été envoyée avec succès !');
+                document.getElementById('prestationForm').reset();
+            }, function(error) {
+                console.error('FAILED...', error);
+                alert('Erreur lors de l\'envoi de la demande : ' + error.text);
+            });
+
+            // Ajouter l'événement au calendrier
+            calendar.addEvent({
+                title: `${type.charAt(0).toUpperCase() + type.slice(1)} - ${description.substring(0, 20)}...`,
+                start: new Date(),
+                allDay: true,
+                extendedProps: { type, details, description }
+            });
+        });
+
+        document.getElementById('calendar').addEventListener('dateClick', function(info) {
+            const title = prompt('Entrez un titre pour votre rendez-vous:');
+            if (title) {
+                const event = {
+                    title: title,
+                    start: info.dateStr,
+                    allDay: true
+                };
+                calendar.addEvent(event);
+
+                // Envoyer l'email avec les détails du rendez-vous
+                emailjs.send("service_fim75em", "template_s8afcog", {
+                    to_email: "alfredgibeauhoussinou@gmail.com",
+                    from_name: "Système de réservation ImmoConseil",
+                    type_prestation: "Rendez-vous",
+                    details: JSON.stringify(event),
+                    description: title
+                }).then(function(response) {
+                    console.log("Email envoyé avec succès", response);
+                    alert("Rendez-vous ajouté et notification envoyée !");
+                }, function(error) {
+                    console.error("Erreur lors de l'envoi de l'email", error);
+                    alert("Rendez-vous ajouté mais erreur lors de l'envoi de la notification.");
+                });
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,278 @@
+body {
+    background-color: #f4f4f4;
+}
+
+.auth-background {
+    background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('https://example.com/immobilier-bg.jpg') no-repeat center center/cover;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 2rem 0;
+}
+
+.auth-container {
+    max-width: 400px;
+    width: 90%;
+    background-color: rgba(255, 255, 255, 0.9);
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+    overflow: hidden;
+}
+
+.auth-section {
+    padding: 2rem;
+}
+
+.auth-section h2 {
+    color: #2c3e50;
+    text-align: center;
+    margin-bottom: 1.5rem;
+    font-size: 2rem;
+}
+
+.auth-form {
+    display: flex;
+    flex-direction: column;
+}
+
+.form-group {
+    margin-bottom: 1rem;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 0.5rem;
+    color: #34495e;
+    font-size: 0.9rem;
+    font-weight: 600;
+}
+
+.form-group input {
+    width: 100%;
+    padding: 0.8rem;
+    border: 1px solid #bdc3c7;
+    border-radius: 5px;
+    font-size: 1rem;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.form-group input:focus {
+    outline: none;
+    border-color: #3498db;
+    box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.2);
+}
+
+.auth-button {
+    background-color: #3498db;
+    color: white;
+    border: none;
+    padding: 0.8rem;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.1s ease;
+    font-size: 1rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-top: 1rem;
+}
+
+.auth-button:hover {
+    background-color: #2980b9;
+    transform: translateY(-2px);
+}
+
+.auth-button:active {
+    transform: translateY(0);
+}
+
+.switch-form {
+    text-align: center;
+    margin-top: 1rem;
+    font-size: 0.9rem;
+}
+
+.switch-form a {
+    color: #3498db;
+    text-decoration: none;
+    font-weight: 600;
+    transition: color 0.3s ease;
+}
+
+.switch-form a:hover {
+    color: #2980b9;
+    text-decoration: underline;
+}
+
+.social-signin-container {
+    margin-top: 1.5rem;
+    text-align: center;
+}
+
+.g-signin2 {
+    display: inline-block;
+}
+
+.social-signin-container::before {
+    content: 'ou';
+    display: block;
+    margin: 1rem 0;
+    color: #95a5a6;
+    font-style: italic;
+    font-size: 0.9rem;
+}
+
+@media screen and (max-width: 480px) {
+    .auth-section {
+        padding: 1.5rem;
+    }
+}
+
+.google-signin-container {
+    margin-top: 20px;
+    text-align: center;
+}
+
+.g-signin2 {
+    display: inline-block;
+}
+
+.social-signin-container {
+    margin-top: 20px;
+    text-align: center;
+}
+
+.social-signin-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    max-width: 220px;
+    margin: 8px 0;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 4px;
+    color: white;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    font-size: 14px;
+    text-align: center;
+}
+
+.social-signin-button:hover {
+    transform: translateY(-2px);
+}
+
+.social-signin-button:active {
+    transform: translateY(0);
+}
+
+.github-button {
+    background-color: #24292e;
+}
+
+.github-button:hover {
+    background-color: #1a1e22;
+}
+
+.icloud-button {
+    background-color: #000000;
+}
+
+.icloud-button:hover {
+    background-color: #333333;
+}
+
+.g-signin2 {
+    display: block;
+    width: 100%;
+    max-width: 220px;
+    margin: 8px 0;
+}
+
+.g-signin2 > div {
+    margin: 0 auto;
+}
+
+/* Ajout d'icônes pour les boutons (vous devrez fournir les images) */
+.social-signin-button::before {
+    content: '';
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    margin-right: 8px;
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
+.github-button::before {
+    background-image: url('chemin/vers/icone-github.png');
+}
+
+.icloud-button::before {
+    background-image: url('chemin/vers/icone-icloud.png');
+}
+
+/* Séparateur entre les options de connexion */
+.social-signin-container::before {
+    content: 'ou';
+    display: block;
+    margin: 15px 0;
+    color: #95a5a6;
+    font-style: italic;
+    font-size: 14px;
+}
+
+/* Responsive design pour les petits écrans */
+@media screen and (max-width: 480px) {
+    .social-signin-button, .g-signin2 {
+        max-width: 100%;
+    }
+}
+
+/* Ajoutez ces styles à la fin de votre fichier connexion.css */
+
+@media (max-width: 768px) {
+    .menu-toggle {
+        display: block;
+    }
+
+    nav ul {
+        display: none;
+        flex-direction: column;
+        position: absolute;
+        top: 60px;
+        left: 0;
+        width: 100%;
+        background-color: #fff;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+
+    nav ul.show {
+        display: flex;
+    }
+
+    nav ul li {
+        margin: 0;
+        text-align: center;
+    }
+
+    nav ul li a {
+        display: block;
+        padding: 1rem;
+    }
+}
+
+.logo img {
+    max-height: 50px; /* Ajustez cette valeur selon la taille souhaitée */
+    width: auto;
+}
+
+@media (max-width: 768px) {
+    .logo img {
+        max-height: 40px; /* Taille légèrement réduite pour les écrans mobiles */
+    }
+}

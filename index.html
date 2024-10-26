@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ImmoConseil - Votre expert immobilier</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+    <script type="text/javascript">
+        (function() {
+            emailjs.init("vE9glgDlbg1YeOhJf");
+        })();
+    </script>
+    <style>
+        /* ... (styles précédents) ... */
+        .message-sent-animation {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: rgba(76, 175, 80, 0.9);
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            display: none;
+            z-index: 1000;
+            animation: fadeInOut 2s ease-in-out;
+        }
+
+        @keyframes fadeInOut {
+            0%, 100% { opacity: 0; }
+            20%, 80% { opacity: 1; }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <nav>
+            <div class="logo">
+                <a href="#accueil">
+                    <img src="Vista Logos/logo-transparent-png.png" alt="ImmoConseil Logo">
+                </a>
+            </div>
+            <div class="menu-toggle">☰</div>
+            <ul class="nav-menu">
+                <li><a href="#services">Services</a></li>
+                <li><a href="#proprietes">Propriétés</a></li>
+                <li><a href="#contact">Contact</a></li>
+                <li><a href="connexion.html">Connexion</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <section id="accueil" class="hero">
+            <video autoplay muted loop id="hero-video">
+                <source src="video1.mp4" type="video/mp4">
+                Votre navigateur ne supporte pas la vidéo HTML5.
+            </video>
+            <div class="hero-content">
+                <h1>Bienvenue chez ImmoConseil</h1>
+                <p>Votre partenaire de confiance pour tous vos projets immobiliers</p>
+                <a href="#contact" class="cta-button">Contactez-nous</a>
+            </div>
+        </section>
+
+        <section id="services">
+            <h2>Nos Services</h2>
+            <div class="services-grid">
+                <div class="service-card">
+                    <i class="fas fa-home"></i>
+                    <h3>Achat</h3>
+                    <p>Trouvez la maison de vos rêves</p>
+                </div>
+                <div class="service-card">
+                    <i class="fas fa-key"></i>
+                    <h3>Vente</h3>
+                    <p>Vendez votre bien au meilleur prix</p>
+                </div>
+                <div class="service-card">
+                    <i class="fas fa-chart-line"></i>
+                    <h3>Investissement</h3>
+                    <p>Optimisez votre patrimoine immobilier</p>
+                </div>
+                <div class="service-card">
+                    <i class="fas fa-coins"></i>
+                    <h3>Financement</h3>
+                    <p>Obtenez le meilleur taux pour votre prêt</p>
+                </div>
+                <div class="service-card">
+                    <i class="fas fa-paint-roller"></i>
+                    <h3>Home Staging</h3>
+                    <p>Valorisez votre bien pour une vente rapide</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="proprietes">
+            <h2>Propriétés en Vedette</h2>
+            <div class="property-slider">
+                <div class="property-card">
+                    <img src="maison1.jpg" alt="Maison moderne">
+                    <h3>Maison Moderne</h3>
+                    <p>4 chambres, 2 salles de bain</p>
+                    <span class="price">450 000 €</span>
+                </div>
+                <div class="property-card">
+                    <img src="maison2.jpg" alt="Appartement en centre-ville">
+                    <h3>Appartement Centre-Ville</h3>
+                    <p>2 chambres, 1 salle de bain</p>
+                    <span class="price">280 000 €</span>
+                </div>
+                <div class="property-card">
+                    <img src="maison3.jpg" alt="Villa avec piscine">
+                    <h3>Villa avec Piscine</h3>
+                    <p>5 chambres, 3 salles de bain</p>
+                    <span class="price">750 000 €</span>
+                </div>
+            </div>
+        </section>
+
+        <section id="contact">
+            <h2>Contactez-nous</h2>
+            <form id="contact-form">
+                <input type="text" name="from_name" placeholder="Votre nom" required>
+                <input type="email" name="from_email" placeholder="Votre email" required>
+                <textarea name="message" placeholder="Votre message" required></textarea>
+                <button type="submit">Envoyer</button>
+            </form>
+        </section>
+    </main>
+
+    <div id="messageSentAnimation" class="message-sent-animation">
+        Message envoyé avec succès !
+    </div>
+
+    <footer>
+        <p>&copy; 2024 ImmoConseil. Tous droits réservés.</p>
+    </footer>
+
+    <script>
+        document.getElementById('contact-form').addEventListener('submit', function(event) {
+            event.preventDefault();
+
+            emailjs.sendForm('service_fim75em', 'template_s8afcog', this)
+                .then(function(response) {
+                    console.log('SUCCESS!', response.status, response.text);
+                    showMessageSentAnimation();
+                    document.getElementById('contact-form').reset();
+                }, function(error) {
+                    console.log('FAILED...', error);
+                    alert('Erreur lors de l\'envoi de la demande : ' + error.text);
+                });
+        });
+
+        function showMessageSentAnimation() {
+            const animation = document.getElementById('messageSentAnimation');
+            animation.style.display = 'block';
+            setTimeout(() => {
+                animation.style.display = 'none';
+            }, 2000);
+        }
+
+        document.querySelector('.menu-toggle').addEventListener('click', function() {
+            document.querySelector('.nav-menu').classList.toggle('show');
+            this.textContent = this.textContent === '☰' ? '✕' : '☰';
+        });
+
+        // Fermer le menu lorsqu'un lien est cliqué
+        document.querySelectorAll('.nav-menu a').forEach(link => {
+            link.addEventListener('click', function() {
+                document.querySelector('.nav-menu').classList.remove('show');
+                document.querySelector('.menu-toggle').textContent = '☰';
+            });
+        });
+
+        // Fermer le menu lorsqu'on clique en dehors
+        document.addEventListener('click', function(event) {
+            const nav = document.querySelector('nav');
+            const menuToggle = document.querySelector('.menu-toggle');
+            if (!nav.contains(event.target) && !menuToggle.contains(event.target)) {
+                document.querySelector('.nav-menu').classList.remove('show');
+                menuToggle.textContent = '☰';
+            }
+        });
+
+        // Ajoutez cette partie pour gérer le clic sur le logo
+        document.querySelector('.logo a').addEventListener('click', function(e) {
+            e.preventDefault();
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        });
+    </script>
+</body>
+</html>
