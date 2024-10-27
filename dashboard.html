@@ -11,6 +11,12 @@
     <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore-compat.js"></script>
     <link href='https://cdn.jsdelivr.net/npm/fullcalendar@5.10.2/main.min.css' rel='stylesheet' />
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+    <script type="text/javascript">
+        (function() {
+            emailjs.init("vE9glgDlbg1YeOhJf");
+        })();
+    </script>
     <style>
         body {
             font-family: 'Arial', sans-serif;
@@ -19,17 +25,27 @@
             margin: 0;
             padding: 0;
             background-color: #f4f4f4;
+            padding-top: 60px; /* Ajoutez cette ligne pour compenser la hauteur de l'en-tête fixe */
         }
         .dashboard-header {
+            background-color: #fff;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            padding: 0.5rem;
+            position: fixed; /* Fixe l'en-tête */
+            top: 0; /* Le positionne tout en haut */
+            left: 0; /* Assure qu'il commence depuis le bord gauche */
+            right: 0; /* Assure qu'il s'étend jusqu'au bord droit */
+            z-index: 1000; /* Assure que l'en-tête reste au-dessus des autres éléments */
+        }
+        .dashboard-nav {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 1rem;
-            background-color: #fff;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            max-width: 1200px;
+            margin: 0 auto;
         }
         .dashboard-title {
-            font-size: 1.5rem;
+            font-size: 1.2rem; /* Réduit de 1.5rem à 1.2rem */
             color: #333;
             margin: 0;
         }
@@ -38,21 +54,125 @@
             margin: 2rem auto;
             padding: 0 1rem;
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 1rem;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
         }
         .dashboard-section {
             background-color: #ffffff;
             border-radius: 8px;
             box-shadow: 0 2px 10px rgba(0,0,0,0.05);
             padding: 1.5rem;
-            transition: transform 0.3s ease;
-        }
-        .dashboard-section:hover {
-            transform: translateY(-5px);
         }
         #calendar {
-            height: 400px;
+            height: 600px;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .fc-header-toolbar {
+            margin-bottom: 1.5em !important;
+        }
+        .fc-button-primary {
+            background-color: #3498db !important;
+            border-color: #3498db !important;
+        }
+        .fc-button-primary:hover {
+            background-color: #2980b9 !important;
+            border-color: #2980b9 !important;
+        }
+        .fc-daygrid-day-number,
+        .fc-col-header-cell-cushion {
+            color: #333;
+            text-decoration: none;
+        }
+        .fc-daygrid-event {
+            background-color: #3498db;
+            border-color: #3498db;
+            color: #fff;
+        }
+        .fc-daygrid-day.fc-day-today {
+            background-color: rgba(52, 152, 219, 0.1) !important;
+        }
+        @media (max-width: 768px) {
+            .dashboard-container {
+                grid-template-columns: 1fr;
+                padding: 0.5rem;
+            }
+            
+            .dashboard-section {
+                padding: 0.5rem;
+            }
+            
+            #calendar {
+                height: 450px; /* Augmenté de 300px à 450px */
+                font-size: 0.9em; /* Légèrement réduit la taille de la police */
+            }
+            
+            .fc-header-toolbar {
+                flex-direction: column;
+                align-items: stretch;
+                margin-bottom: 0.5em !important;
+            }
+            
+            .fc-header-toolbar .fc-toolbar-chunk {
+                margin-bottom: 0.3em;
+                display: flex;
+                justify-content: center;
+            }
+            
+            .fc-button {
+                font-size: 0.8rem;
+                padding: 0.4em 0.6em;
+            }
+            
+            .fc-daygrid-day-number,
+            .fc-col-header-cell-cushion {
+                font-size: 0.9em;
+            }
+            
+            .dashboard-nav {
+                flex-direction: row; /* Changé de column à row pour garder l'alignement horizontal */
+                justify-content: space-between;
+            }
+            
+            .dashboard-title {
+                font-size: 1rem; /* Réduit encore plus pour mobile */
+                margin-bottom: 0; /* Supprime la marge du bas */
+            }
+            
+            .logout-button {
+                font-size: 0.7rem; /* Réduit encore plus pour mobile */
+                padding: 0.2rem 0.4rem;
+                margin-top: 0; /* Supprime la marge du haut */
+            }
+            
+            .logo img {
+                height: 25px; /* Réduit encore plus la taille du logo pour mobile */
+            }
+            
+            .prestation-form input,
+            .prestation-form select,
+            .prestation-form textarea {
+                font-size: 0.9rem;
+                padding: 0.4rem;
+                width: 100%;
+            }
+            
+            .prestation-form button {
+                font-size: 0.8rem;
+                padding: 0.4rem;
+                width: 100%;
+            }
+            
+            .fc-button {
+                font-size: 0.7rem;
+                padding: 0.2em 0.4em;
+            }
+            
+            body {
+                padding-top: 50px; /* Réduisez cette valeur pour les écrans mobiles si nécessaire */
+            }
         }
         .prestation-form {
             display: flex;
@@ -71,84 +191,251 @@
             background-color: #3498db;
             color: white;
             border: none;
-            padding: 0.75rem;
+            padding: 0.6rem;
             border-radius: 4px;
             cursor: pointer;
             transition: background-color 0.3s;
-            font-size: 1rem;
+            font-size: 0.9rem;
         }
         .prestation-form button:hover {
             background-color: #2980b9;
         }
         .logout-button {
-            background-color: transparent;
-            color: #3498db;
-            border: 2px solid #3498db;
-            padding: 0.5rem 1rem;
+            background-color: #e74c3c;
+            color: white;
+            border: none;
+            padding: 0.3rem 0.6rem; /* Réduit de 0.4rem 0.8rem à 0.3rem 0.6rem */
             border-radius: 4px;
             cursor: pointer;
-            transition: all 0.3s ease;
-            font-size: 0.9rem;
-            font-weight: 600;
-            text-transform: uppercase;
+            transition: background-color 0.3s;
+            font-size: 0.8rem; /* Réduit de 0.9rem à 0.8rem */
         }
         .logout-button:hover {
-            background-color: #3498db;
-            color: white;
+            background-color: #c0392b;
         }
-        .welcome-animation, .goodbye-animation {
+        .success-animation {
             position: fixed;
-            top: 20px;
-            right: 20px;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
             background-color: rgba(52, 152, 219, 0.9);
             color: white;
-            padding: 1rem;
-            border-radius: 5px;
+            padding: 20px;
+            border-radius: 10px;
             text-align: center;
             display: none;
             z-index: 1000;
-            animation: slideIn 0.5s ease-out, fadeOut 0.5s ease-in 2.5s;
+            animation: fadeInOut 2s ease-in-out;
         }
-        @keyframes slideIn {
-            from { transform: translateX(100%); opacity: 0; }
-            to { transform: translateX(0); opacity: 1; }
+
+        @keyframes fadeInOut {
+            0%, 100% { opacity: 0; }
+            20%, 80% { opacity: 1; }
         }
-        @keyframes fadeOut {
-            from { opacity: 1; }
-            to { opacity: 0; }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0,0,0,0.4);
+            opacity: 0;
+            transition: opacity 0.3s ease;
         }
+
+        .modal.show {
+            opacity: 1;
+        }
+
+        .modal-content {
+            background-color: #fefefe;
+            margin: 15% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%;
+            max-width: 500px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            transform: scale(0.7);
+            opacity: 0;
+            transition: all 0.3s ease;
+        }
+
+        .modal.show .modal-content {
+            transform: scale(1);
+            opacity: 1;
+        }
+
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: color 0.3s ease;
+        }
+
+        .close:hover,
+        .close:focus {
+            color: #000;
+            text-decoration: none;
+        }
+
+        #addEventForm {
+            display: flex;
+            flex-direction: column;
+        }
+
+        #addEventForm input,
+        #addEventForm button {
+            margin-top: 10px;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+
+        #addEventForm button {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        #addEventForm button:hover {
+            background-color: #2980b9;
+        }
+
+        .nav-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 20px;
+        }
+
+        .nav-links a {
+            color: #333;
+            text-decoration: none;
+            padding: 5px 10px;
+            transition: color 0.3s;
+        }
+
+        .nav-links a:hover {
+            color: #3498db;
+        }
+
+        .nav-links a.active {
+            color: #3498db;
+            font-weight: bold;
+        }
+
         @media (max-width: 768px) {
-            .dashboard-header {
+            .nav-links {
+                display: none;
+            }
+
+            .nav-links.show {
+                display: flex;
                 flex-direction: column;
-                align-items: flex-start;
+                position: absolute;
+                top: 60px;
+                left: 0;
+                right: 0;
+                background-color: white;
+                padding: 10px;
+                box-shadow: 0 2px 5px rgba(0,0,0,0.1);
             }
-            .dashboard-title {
-                margin-bottom: 1rem;
+        }
+
+        .menu-toggle {
+            display: none;
+            font-size: 1.2rem;
+            cursor: pointer;
+            padding: 4px 8px;
+            border-radius: 4px;
+            transition: background-color 0.3s;
+        }
+
+        @media (max-width: 768px) {
+            .menu-toggle {
+                display: block;
+                font-size: 1rem;
+                padding: 3px 6px;
             }
+
+            .nav-container {
+                padding: 0.3rem;
+            }
+
+            .logo img {
+                height: 25px;
+            }
+
+            .nav-links.show {
+                top: 45px;
+            }
+
+            .dashboard-header {
+                padding: 0.3rem;
+            }
+
+            body {
+                padding-top: 45px;
+            }
+
+            .nav-links {
+                display: none;
+            }
+
+            .nav-links.show {
+                display: flex;
+                flex-direction: column;
+                position: absolute;
+                left: 0;
+                right: 0;
+                background-color: white;
+                padding: 8px;
+                box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            }
+
+            .nav-links a {
+                padding: 8px;
+                text-align: center;
+            }
+
             .logout-button {
-                align-self: flex-start;
-            }
-            #calendar {
-                height: 300px;
+                width: 100%;
+                margin: 8px 0;
+                padding: 8px;
             }
         }
     </style>
 </head>
 <body>
     <header class="dashboard-header">
-        <div class="logo">
-            <img src="Vista Logos/logo-transparent-png.png" alt="ImmoConseil Logo" style="height: 40px;">
-        </div>
-        <h1 class="dashboard-title">Tableau de bord</h1>
-        <button id="logoutButton" class="logout-button">Se déconnecter</button>
+        <nav class="nav-container">
+            <div class="logo">
+                <img src="Vista Logos/logo-transparent-png.png" alt="ImmoConseil Logo" style="height: 40px;">
+            </div>
+            <div class="nav-links">
+                <a href="dashboard.html" class="active">Tableau de bord</a>
+                <a href="profile.html">Profil</a>
+                <button id="logoutButton" class="logout-button">Se déconnecter</button>
+            </div>
+        </nav>
     </header>
 
     <main class="dashboard-container">
-        <div id="welcomeAnimation" class="welcome-animation">
-            <h3>Bienvenue, <span id="userDisplayName"></span></h3>
-            <p>Ravi de vous revoir sur votre espace personnel.</p>
-        </div>
-
         <section class="dashboard-section">
             <h2>Agenda</h2>
             <div id="calendar"></div>
@@ -195,9 +482,22 @@
         </section>
     </main>
 
-    <div id="goodbyeAnimation" class="goodbye-animation">
-        <h3>À bientôt, <span id="userDisplayNameLogout"></span> !</h3>
-        <p>Merci de votre visite.</p>
+    <div id="successAnimation" class="success-animation">
+        Demande envoyée avec succès !
+    </div>
+
+    <!-- Modal pour ajouter un rendez-vous -->
+    <div id="addEventModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Ajouter un rendez-vous</h2>
+            <form id="addEventForm">
+                <input type="text" id="eventTitle" placeholder="Titre du rendez-vous" required>
+                <input type="datetime-local" id="eventStart" required>
+                <input type="datetime-local" id="eventEnd" required>
+                <button type="submit">Ajouter</button>
+            </form>
+        </div>
     </div>
 
     <script src='https://cdn.jsdelivr.net/npm/fullcalendar@5.10.2/main.min.js'></script>
@@ -221,11 +521,13 @@
         const auth = firebase.auth();
 
         let calendar;
-        let isAdmin = false;
 
         document.addEventListener('DOMContentLoaded', function() {
-            console.log("DOM chargé");
             var calendarEl = document.getElementById('calendar');
+            var addEventModal = document.getElementById('addEventModal');
+            var addEventForm = document.getElementById('addEventForm');
+            var span = document.getElementsByClassName("close")[0];
+
             calendar = new FullCalendar.Calendar(calendarEl, {
                 initialView: 'dayGridMonth',
                 locale: 'fr',
@@ -234,36 +536,93 @@
                     center: 'title',
                     right: 'dayGridMonth,timeGridWeek,timeGridDay'
                 },
+                buttonText: {
+                    today: "Auj.",
+                    month: 'Mois',
+                    week: 'Sem.',
+                    day: 'Jour'
+                },
                 events: [], // Les événements seront chargés dynamiquement
                 selectable: true,
                 select: function(info) {
-                    const title = prompt('Entrez un titre pour votre rendez-vous:');
-                    if (title) {
-                        const event = {
-                            title: title,
-                            start: info.startStr,
-                            end: info.endStr,
-                            allDay: info.allDay
-                        };
-                        calendar.addEvent(event);
-                        
-                        // Enregistrer le rendez-vous dans Firestore
-                        db.collection("rendez-vous").add({
-                            title: event.title,
-                            start: event.start,
-                            end: event.end,
-                            allDay: event.allDay,
-                            userId: auth.currentUser.uid
-                        }).then(() => {
-                            console.log("Rendez-vous enregistré avec succès");
-                        }).catch((error) => {
-                            console.error("Erreur lors de l'enregistrement du rendez-vous:", error);
-                        });
-                    }
-                    calendar.unselect();
+                    document.getElementById('eventStart').value = info.startStr;
+                    document.getElementById('eventEnd').value = info.endStr;
+                    addEventModal.style.display = "block";
+                    setTimeout(() => {
+                        addEventModal.classList.add('show');
+                    }, 10);
                 }
             });
             calendar.render();
+
+            // Fermer la modal quand on clique sur le X
+            span.onclick = function() {
+                closeModal();
+            }
+
+            // Fermer la modal quand on clique en dehors
+            window.onclick = function(event) {
+                if (event.target == addEventModal) {
+                    closeModal();
+                }
+            }
+
+            function closeModal() {
+                addEventModal.classList.remove('show');
+                setTimeout(() => {
+                    addEventModal.style.display = "none";
+                }, 300);
+            }
+
+            addEventForm.onsubmit = function(e) {
+                e.preventDefault();
+                var title = document.getElementById('eventTitle').value;
+                var start = document.getElementById('eventStart').value;
+                var end = document.getElementById('eventEnd').value;
+                if (title && start && end) {
+                    const event = {
+                        title: title,
+                        start: start,
+                        end: end,
+                        allDay: false
+                    };
+                    calendar.addEvent(event);
+                    
+                    // Enregistrer le rendez-vous dans Firestore
+                    db.collection("rendez-vous").add({
+                        title: event.title,
+                        start: event.start,
+                        end: event.end,
+                        allDay: event.allDay,
+                        userId: auth.currentUser.uid
+                    }).then(() => {
+                        console.log("Rendez-vous enregistré avec succès");
+                        sendEmailNotification('Nouveau rendez-vous', `
+                            Titre: ${event.title}
+                            Début: ${event.start}
+                            Fin: ${event.end}
+                            Journée entière: ${event.allDay ? 'Oui' : 'Non'}
+                        `);
+                    }).catch((error) => {
+                        console.error("Erreur lors de l'enregistrement du rendez-vous:", error);
+                    });
+                    
+                    closeModal();
+                    addEventForm.reset();
+                }
+            };
+
+            // Ajuster la taille du calendrier après le rendu initial
+            function adjustCalendarSize() {
+                if (window.innerWidth <= 768) {
+                    calendar.setOption('aspectRatio', 0.8); // Réduit le ratio pour mobile
+                } else {
+                    calendar.setOption('aspectRatio', 1.35); // Ratio par défaut pour desktop
+                }
+            }
+            
+            adjustCalendarSize();
+            window.addEventListener('resize', adjustCalendarSize);
         });
 
         function loadUserRendezVous() {
@@ -282,77 +641,22 @@
                 });
         }
 
-        function loadAllRendezVous() {
-            console.log("Chargement de tous les rendez-vous");
-            db.collection("rendez-vous").get()
-                .then((querySnapshot) => {
-                    const events = [];
-                    querySnapshot.forEach((doc) => {
-                        const event = doc.data();
-                        event.title = `${event.title} (${event.userId})`;
-                        events.push(event);
-                    });
-                    console.log("Tous les rendez-vous chargés:", events);
-                    calendar.addEventSource(events);
-                })
-                .catch((error) => {
-                    console.error("Erreur lors du chargement de tous les rendez-vous:", error);
-                });
-        }
-
         auth.onAuthStateChanged((user) => {
             if (user) {
                 console.log("Utilisateur connecté:", user.email);
-                document.getElementById('userDisplayName').textContent = user.displayName || user.email;
-                document.getElementById('userDisplayNameLogout').textContent = user.displayName || user.email;
-                
-                // Vérifier si l'utilisateur est admin
-                isAdmin = user.email === "alfredgibeauahoussinou@gmail.com";
-                console.log("Est admin:", isAdmin);
-                
-                if (isAdmin) {
-                    loadAllRendezVous();
-                } else {
-                    loadUserRendezVous();
-                }
+                loadUserRendezVous();
             } else {
                 console.log("Utilisateur non connecté, redirection vers la page de connexion");
                 window.location.href = 'connexion.html';
             }
         });
 
-        function showWelcomeAnimation() {
-            const welcomeAnimation = document.getElementById('welcomeAnimation');
-            welcomeAnimation.style.display = 'block';
-            setTimeout(() => {
-                welcomeAnimation.style.display = 'none';
-            }, 3000);
-        }
-
         document.getElementById('logoutButton').addEventListener('click', () => {
-            const goodbyeAnimation = document.getElementById('goodbyeAnimation');
-            goodbyeAnimation.style.display = 'block';
-            setTimeout(() => {
-                auth.signOut().then(() => {
-                    window.location.href = 'connexion.html';
-                }).catch((error) => {
-                    console.error('Erreur lors de la déconnexion:', error);
-                });
-            }, 2000);
-        });
-
-        document.getElementById('prestationType').addEventListener('change', function() {
-            document.getElementById('estimationDetails').style.display = 'none';
-            document.getElementById('visiteDetails').style.display = 'none';
-            document.getElementById('conseilDetails').style.display = 'none';
-            
-            if (this.value === 'estimation') {
-                document.getElementById('estimationDetails').style.display = 'block';
-            } else if (this.value === 'visite') {
-                document.getElementById('visiteDetails').style.display = 'block';
-            } else if (this.value === 'conseil') {
-                document.getElementById('conseilDetails').style.display = 'block';
-            }
+            auth.signOut().then(() => {
+                window.location.href = 'connexion.html';
+            }).catch((error) => {
+                console.error('Erreur lors de la déconnexion:', error);
+            });
         });
 
         document.getElementById('prestationForm').addEventListener('submit', function(e) {
@@ -378,56 +682,94 @@
             
             const description = document.getElementById('eventDescription').value;
             
-            // Envoyer l'email avec les détails de la prestation
-            emailjs.send("service_fim75em", "template_s8afcog", {
-                to_email: "alfredgibeauhoussinou@gmail.com",
-                from_name: "Système de rservation ImmoConseil",
-                type_prestation: type,
-                details: JSON.stringify(details),
-                description: description
-            }).then(function(response) {
-                console.log('SUCCESS!', response.status, response.text);
-                alert('Votre demande de prestation a été envoyée avec succès !');
-                document.getElementById('prestationForm').reset();
-            }, function(error) {
-                console.error('FAILED...', error);
-                alert('Erreur lors de l\'envoi de la demande : ' + error.text);
-            });
-
-            // Ajouter l'événement au calendrier
-            calendar.addEvent({
-                title: `${type.charAt(0).toUpperCase() + type.slice(1)} - ${description.substring(0, 20)}...`,
-                start: new Date(),
-                allDay: true,
-                extendedProps: { type, details, description }
+            // Envoyer la demande de prestation à Firestore
+            db.collection("prestations").add({
+                type: type,
+                details: details,
+                description: description,
+                userId: auth.currentUser.uid,
+                date: new Date()
+            }).then(() => {
+                console.log("Demande de prestation envoyée avec succès");
+                showSuccessAnimation();
+                this.reset();
+                // Envoyer un email pour la nouvelle demande de prestation
+                sendEmailNotification('Nouvelle demande de prestation', `
+                    Type: ${type}
+                    Détails: ${JSON.stringify(details)}
+                    Description: ${description}
+                `);
+            }).catch((error) => {
+                console.error("Erreur lors de l'envoi de la demande de prestation:", error);
+                alert("Une erreur s'est produite lors de l'envoi de votre demande. Veuillez réessayer.");
             });
         });
 
-        document.getElementById('calendar').addEventListener('dateClick', function(info) {
-            const title = prompt('Entrez un titre pour votre rendez-vous:');
-            if (title) {
-                const event = {
-                    title: title,
-                    start: info.dateStr,
-                    allDay: true
-                };
-                calendar.addEvent(event);
+        function showSuccessAnimation() {
+            const animation = document.getElementById('successAnimation');
+            animation.style.display = 'block';
+            setTimeout(() => {
+                animation.style.display = 'none';
+            }, 2000);
+        }
 
-                // Envoyer l'email avec les détails du rendez-vous
-                emailjs.send("service_fim75em", "template_s8afcog", {
-                    to_email: "alfredgibeauhoussinou@gmail.com",
-                    from_name: "Système de réservation ImmoConseil",
-                    type_prestation: "Rendez-vous",
-                    details: JSON.stringify(event),
-                    description: title
-                }).then(function(response) {
-                    console.log("Email envoyé avec succès", response);
-                    alert("Rendez-vous ajouté et notification envoyée !");
-                }, function(error) {
-                    console.error("Erreur lors de l'envoi de l'email", error);
-                    alert("Rendez-vous ajouté mais erreur lors de l'envoi de la notification.");
-                });
+        // Gestion de l'affichage des détails spécifiques à chaque type de prestation
+        document.getElementById('prestationType').addEventListener('change', function() {
+            document.getElementById('estimationDetails').style.display = 'none';
+            document.getElementById('visiteDetails').style.display = 'none';
+            document.getElementById('conseilDetails').style.display = 'none';
+            
+            if (this.value === 'estimation') {
+                document.getElementById('estimationDetails').style.display = 'block';
+            } else if (this.value === 'visite') {
+                document.getElementById('visiteDetails').style.display = 'block';
+            } else if (this.value === 'conseil') {
+                document.getElementById('conseilDetails').style.display = 'block';
             }
+        });
+
+        function sendEmailNotification(subject, body) {
+            emailjs.send("service_fim75em", "template_s8afcog", {
+                to_email: "alfredgibeauahoussinou@gmail.com",
+                subject: subject,
+                message: body
+            }).then(function(response) {
+                console.log('Email envoyé avec succès:', response);
+            }, function(error) {
+                console.error('Erreur lors de l\'envoi de l\'email:', error);
+            });
+        }
+
+        // Ajouter la gestion du menu mobile
+        document.addEventListener('DOMContentLoaded', function() {
+            const navLinks = document.querySelector('.nav-links');
+            
+            // Créer le bouton de menu hamburger
+            const menuToggle = document.createElement('div');
+            menuToggle.className = 'menu-toggle';
+            menuToggle.innerHTML = '☰';
+            document.querySelector('.nav-container').insertBefore(menuToggle, navLinks);
+
+            menuToggle.addEventListener('click', function() {
+                navLinks.classList.toggle('show');
+                this.innerHTML = navLinks.classList.contains('show') ? '✕' : '☰';
+            });
+
+            // Fermer le menu quand on clique sur un lien
+            document.querySelectorAll('.nav-links a').forEach(link => {
+                link.addEventListener('click', function() {
+                    navLinks.classList.remove('show');
+                    menuToggle.innerHTML = '☰';
+                });
+            });
+
+            // Fermer le menu quand on clique en dehors
+            document.addEventListener('click', function(event) {
+                if (!navLinks.contains(event.target) && !menuToggle.contains(event.target)) {
+                    navLinks.classList.remove('show');
+                    menuToggle.innerHTML = '☰';
+                }
+            });
         });
     </script>
 </body>

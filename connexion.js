@@ -1,6 +1,6 @@
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-app.js";
-import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signInWithPopup, GoogleAuthProvider, OAuthProvider, updateProfile } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-auth.js";
+import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signInWithPopup, GoogleAuthProvider, OAuthProvider, updateProfile, sendPasswordResetEmail } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-auth.js";
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
 
@@ -105,4 +105,20 @@ export function signInWithApple() {
       console.error("Erreur de connexion Apple :", error);
       alert("Erreur de connexion Apple : " + error.message);
     });
+}
+
+// Fonction pour réinitialiser le mot de passe
+export function resetPassword(email) {
+    const auth = getAuth();
+    sendPasswordResetEmail(auth, email)
+        .then(() => {
+            alert("Un email de réinitialisation a été envoyé à votre adresse email.");
+            // Retour à la page de connexion
+            document.getElementById('mot-de-passe-oublie').style.display = 'none';
+            document.getElementById('connexion').style.display = 'block';
+        })
+        .catch((error) => {
+            console.error("Erreur lors de la réinitialisation du mot de passe :", error);
+            alert("Erreur : " + error.message);
+        });
 }
