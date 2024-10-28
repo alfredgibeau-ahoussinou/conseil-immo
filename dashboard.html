@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Tableau de bord - ImmoConseil</title>
+    <link rel="icon" type="image/png" href="Vista Logos/logo-transparent-png.png">
     <link rel="stylesheet" href="styles.css">
     <link rel="stylesheet" href="connexion.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
@@ -425,13 +426,16 @@
     <header class="dashboard-header">
         <nav class="nav-container">
             <div class="logo">
-                <img src="Vista Logos/logo-transparent-png.png" alt="ImmoConseil Logo" style="height: 40px;">
+                <a href="#accueil">
+                    <img src="Vista Logos/logo-transparent-png.png" alt="ImmoConseil Logo">
+                </a>
             </div>
-            <div class="nav-links">
-                <a href="dashboard.html" class="active">Tableau de bord</a>
-                <a href="profile.html">Profil</a>
-                <button id="logoutButton" class="logout-button">Se déconnecter</button>
-            </div>
+            <div class="menu-toggle">☰</div>
+            <ul class="nav-menu">
+                <li><a href="dashboard.html" class="active">Tableau de bord</a></li>
+                <li><a href="profile.html">Profil</a></li>
+                <li><button id="logoutButton" class="logout-button">Se déconnecter</button></li>
+            </ul>
         </nav>
     </header>
 
@@ -740,34 +744,30 @@
             });
         }
 
-        // Ajouter la gestion du menu mobile
+        // Supprimer tous les anciens gestionnaires d'événements du menu mobile et garder uniquement ceux-ci
         document.addEventListener('DOMContentLoaded', function() {
-            const navLinks = document.querySelector('.nav-links');
-            
-            // Créer le bouton de menu hamburger
-            const menuToggle = document.createElement('div');
-            menuToggle.className = 'menu-toggle';
-            menuToggle.innerHTML = '☰';
-            document.querySelector('.nav-container').insertBefore(menuToggle, navLinks);
+            // Gestion du menu mobile
+            const menuToggle = document.querySelector('.menu-toggle');
+            const navMenu = document.querySelector('.nav-menu');
 
             menuToggle.addEventListener('click', function() {
-                navLinks.classList.toggle('show');
-                this.innerHTML = navLinks.classList.contains('show') ? '✕' : '☰';
+                navMenu.classList.toggle('show');
+                this.textContent = navMenu.classList.contains('show') ? '✕' : '☰';
             });
 
             // Fermer le menu quand on clique sur un lien
-            document.querySelectorAll('.nav-links a').forEach(link => {
-                link.addEventListener('click', function() {
-                    navLinks.classList.remove('show');
-                    menuToggle.innerHTML = '☰';
+            document.querySelectorAll('.nav-menu a, .nav-menu button').forEach(item => {
+                item.addEventListener('click', function() {
+                    navMenu.classList.remove('show');
+                    menuToggle.textContent = '☰';
                 });
             });
 
             // Fermer le menu quand on clique en dehors
             document.addEventListener('click', function(event) {
-                if (!navLinks.contains(event.target) && !menuToggle.contains(event.target)) {
-                    navLinks.classList.remove('show');
-                    menuToggle.innerHTML = '☰';
+                if (!event.target.closest('.nav-container')) {
+                    navMenu.classList.remove('show');
+                    menuToggle.textContent = '☰';
                 }
             });
         });

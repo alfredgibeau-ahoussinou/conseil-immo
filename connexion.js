@@ -57,12 +57,8 @@ export function signIn(email, password) {
       // Connexion réussie
       const user = userCredential.user;
       console.log("Utilisateur connecté :", user);
-      // Rediriger vers la page admin si c'est l'admin, sinon vers le dashboard
-      if (user.email === "alfredgibeauahoussinou@gmail.com") {
-        window.location.href = "admin.html";
-      } else {
-        window.location.href = "dashboard.html";
-      }
+      // Rediriger tous les utilisateurs vers le dashboard
+      window.location.href = "dashboard.html";
     })
     .catch((error) => {
       // Erreur lors de la connexion

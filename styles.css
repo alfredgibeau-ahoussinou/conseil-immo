@@ -315,3 +315,130 @@ footer {
         font-size: 1.2rem;
     }
 }
+
+.profile-section {
+    max-width: 800px;
+    margin: 80px auto 2rem auto;
+    padding: 2rem;
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0 0 20px rgba(0,0,0,0.1);
+    text-align: center; /* Centrer tout le texte par défaut */
+}
+
+.profile-header {
+    display: flex;
+    justify-content: center; /* Centrer horizontalement */
+    align-items: center;
+    margin-bottom: 2rem;
+}
+
+.profile-info {
+    text-align: center; /* Assurer que le texte est centré */
+}
+
+.profile-info h2 {
+    margin-bottom: 0.5rem;
+}
+
+.profile-details {
+    text-align: left; /* Garder le formulaire aligné à gauche pour la lisibilité */
+    max-width: 600px; /* Réduire la largeur maximale */
+    margin: 0 auto; /* Centrer le conteneur */
+}
+
+.form-group {
+    margin-bottom: 1rem;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: bold;
+}
+
+.form-group input {
+    width: 100%;
+    padding: 0.8rem;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+}
+
+.save-btn {
+    background: var(--primary-color);
+    color: white;
+    padding: 0.8rem 1.5rem;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.preferences-section,
+.activity-history {
+    max-width: 600px;
+    margin: 2rem auto 0;
+    padding-top: 2rem;
+    border-top: 1px solid #eee;
+}
+
+.preference-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 0;
+}
+
+.activity-list {
+    max-height: 300px;
+    overflow-y: auto;
+}
+
+/* Ajouter ou modifier ces styles */
+.dashboard-header {
+    background-color: #fff;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000;
+}
+
+.profile-section {
+    margin-top: 80px; /* Ajouter cette marge pour compenser le header fixe */
+    padding-top: 20px;
+}
+
+@media (max-width: 768px) {
+    .profile-section {
+        margin-top: 60px; /* Réduire la marge pour les écrans mobiles */
+    }
+}
+
+.activity-item {
+    text-align: center;
+    padding: 0.5rem 0;
+    border-bottom: 1px solid #eee;
+}
+
+.activity-item:last-child {
+    border-bottom: none;
+}
+
+h3 {
+    text-align: center;
+    margin-bottom: 1.5rem;
+    color: #2c3e50;
+}
+
+.success-message {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: #2ecc71;
+    color: white;
+    padding: 1rem 2rem;
+    border-radius: 5px;
+    z-index: 1000;
+}
