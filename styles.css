@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap');
 
 * {
     margin: 0;
@@ -7,7 +7,7 @@
 }
 
 body {
-    font-family: 'Poppins', sans-serif;
+    font-family: 'Montserrat', sans-serif;
     line-height: 1.6;
     color: #333;
     background-color: #f4f4f4;
@@ -441,4 +441,263 @@ h3 {
     padding: 1rem 2rem;
     border-radius: 5px;
     z-index: 1000;
+}
+
+/* Ajouter ces styles pour le bouton Instagram */
+.social-media {
+    margin-bottom: 1rem;
+}
+
+.social-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    background-color: #3498db;
+    color: white;
+    padding: 0.8rem 1.5rem;
+    border-radius: 5px;
+    text-decoration: none;
+    transition: all 0.3s ease;
+}
+
+.social-link:hover {
+    background-color: #2980b9;
+    transform: translateY(-2px);
+}
+
+.social-link i {
+    font-size: 1.2rem;
+}
+
+@media (max-width: 768px) {
+    .social-link {
+        padding: 0.6rem 1rem;
+        font-size: 0.9rem;
+    }
+}
+
+/* Ajouter des styles spécifiques pour les titres */
+h1, h2, h3, h4, h5, h6 {
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 600;
+}
+
+/* Ajuster le poids de la police pour certains éléments */
+.nav-menu a {
+    font-weight: 500;
+}
+
+.service-card h3 {
+    font-weight: 600;
+}
+
+.cta-button {
+    font-weight: 500;
+}
+
+.hero h1 {
+    font-weight: 700;
+}
+
+.hero p {
+    font-weight: 400;
+}
+
+/* Styles du chatbot */
+.chatbot-container {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    z-index: 1000;
+}
+
+.chatbot-toggle {
+    width: 75px;
+    height: 75px;
+    background: linear-gradient(135deg, #3498db, #2980b9);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow: 0 4px 15px rgba(52, 152, 219, 0.3);
+    transition: all 0.3s ease;
+}
+
+.chatbot-toggle:hover {
+    transform: scale(1.1) rotate(5deg);
+    box-shadow: 0 6px 20px rgba(52, 152, 219, 0.4);
+}
+
+.chatbot-toggle i {
+    color: white;
+    font-size: 32px;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+}
+
+.chatbot-box {
+    position: absolute;
+    bottom: 95px;
+    right: 0;
+    width: 400px;
+    height: 600px;
+    background-color: #fff;
+    border-radius: 20px;
+    box-shadow: 0 5px 25px rgba(0,0,0,0.15);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    transition: all 0.3s ease;
+    transform-origin: bottom right;
+}
+
+.chatbot-header {
+    padding: 25px;
+    background: linear-gradient(135deg, #3498db, #2980b9);
+    color: white;
+    border-radius: 20px 20px 0 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+.chatbot-header h3 {
+    margin: 0;
+    font-size: 20px;
+    font-weight: 600;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+}
+
+.close-chat {
+    background: none;
+    border: none;
+    color: white;
+    font-size: 24px;
+    cursor: pointer;
+    transition: transform 0.3s ease;
+    padding: 0;
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.close-chat:hover {
+    transform: rotate(90deg);
+}
+
+.chatbot-messages {
+    flex-grow: 1;
+    padding: 25px;
+    overflow-y: auto;
+    background-color: #f8f9fa;
+    scroll-behavior: smooth;
+}
+
+.message {
+    margin-bottom: 15px;
+    padding: 15px 20px;
+    border-radius: 18px;
+    max-width: 90%;
+    font-size: 16px;
+    line-height: 1.4;
+    position: relative;
+    animation: messageAppear 0.3s ease;
+}
+
+@keyframes messageAppear {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.message.bot {
+    background-color: #e9ecef;
+    color: #2c3e50;
+    margin-right: auto;
+    border-bottom-left-radius: 5px;
+}
+
+.message.user {
+    background: linear-gradient(135deg, #3498db, #2980b9);
+    color: white;
+    margin-left: auto;
+    border-bottom-right-radius: 5px;
+}
+
+.chatbot-input {
+    padding: 25px;
+    display: flex;
+    gap: 12px;
+    border-top: 1px solid #eee;
+    background-color: white;
+}
+
+.chatbot-input input {
+    flex-grow: 1;
+    padding: 15px 20px;
+    border: 2px solid #e9ecef;
+    border-radius: 25px;
+    outline: none;
+    font-size: 16px;
+    transition: all 0.3s ease;
+}
+
+.chatbot-input input:focus {
+    border-color: #3498db;
+    box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
+}
+
+.send-message {
+    background: linear-gradient(135deg, #3498db, #2980b9);
+    color: white;
+    border: none;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+.send-message:hover {
+    transform: scale(1.1);
+    box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+}
+
+.send-message i {
+    font-size: 20px;
+}
+
+@media (max-width: 768px) {
+    .chatbot-box {
+        width: calc(100vw - 30px);
+        height: 80vh;
+        bottom: 90px;
+        right: 20px;
+    }
+
+    .chatbot-toggle {
+        width: 65px;
+        height: 65px;
+    }
+
+    .chatbot-toggle i {
+        font-size: 28px;
+    }
+
+    .message {
+        font-size: 15px;
+        padding: 12px 16px;
+    }
 }

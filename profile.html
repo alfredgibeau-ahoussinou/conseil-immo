@@ -11,6 +11,86 @@
     <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-storage-compat.js"></script>
+    <style>
+        .profile-section {
+            max-width: 800px;
+            margin: 150px auto 2rem auto;
+            padding: 4rem;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+
+        .profile-header {
+            margin-bottom: 4rem;
+        }
+
+        .profile-info h2 {
+            font-size: 2.2rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .profile-info p {
+            font-size: 1.2rem;
+            color: #666;
+        }
+
+        .profile-details {
+            margin-top: 4rem;
+            margin-bottom: 4rem;
+        }
+
+        .form-group {
+            margin-bottom: 2rem;
+        }
+
+        .preferences-section,
+        .activity-history {
+            margin-top: 4rem;
+            padding-top: 4rem;
+        }
+
+        @media (max-width: 768px) {
+            .profile-section {
+                margin: 150px 1rem 2rem 1rem;
+                padding: 2.5rem 1rem;
+                width: 95%;
+                margin-left: auto;
+                margin-right: auto;
+            }
+
+            .profile-details {
+                padding: 0 1.5rem;
+            }
+
+            .form-group {
+                margin-bottom: 2.5rem;
+            }
+
+            .form-group input {
+                padding: 1rem;
+                font-size: 1.1rem;
+            }
+
+            .preferences-section,
+            .activity-history {
+                margin-top: 3rem;
+                padding-top: 3rem;
+            }
+
+            .preference-item {
+                padding: 1.5rem 0;
+                flex-direction: column;
+                gap: 0.8rem;
+                align-items: flex-start;
+            }
+
+            .activity-list {
+                padding: 0 1.5rem;
+            }
+        }
+    </style>
 </head>
 <body>
     <header class="dashboard-header">

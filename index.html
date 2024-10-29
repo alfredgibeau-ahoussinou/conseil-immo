@@ -150,6 +150,12 @@
     </div>
 
     <footer>
+        <div class="social-media">
+            <a href="https://www.instagram.com/conseil.immo_/" target="_blank" class="social-link">
+                <i class="fab fa-instagram"></i>
+                Suivez-nous sur Instagram
+            </a>
+        </div>
         <p>&copy; 2024 ImmoConseil. Tous droits réservés.</p>
     </footer>
 
@@ -207,6 +213,283 @@
                 behavior: 'smooth'
             });
         });
+    </script>
+
+    <!-- Chatbot -->
+    <div class="chatbot-container">
+        <div class="chatbot-toggle">
+            <i class="fas fa-comments"></i>
+        </div>
+        <div class="chatbot-box" style="display: none;">
+            <div class="chatbot-header">
+                <h3>Assistant ImmoConseil</h3>
+                <button class="close-chat">×</button>
+            </div>
+            <div class="chatbot-messages">
+                <div class="message bot">
+                    Bonjour ! Je suis l'assistant virtuel d'ImmoConseil. Comment puis-je vous aider ?
+                </div>
+            </div>
+            <div class="chatbot-input">
+                <input type="text" placeholder="Écrivez votre message...">
+                <button class="send-message">
+                    <i class="fas fa-paper-plane"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const chatbotToggle = document.querySelector('.chatbot-toggle');
+        const chatbotBox = document.querySelector('.chatbot-box');
+        const closeChat = document.querySelector('.close-chat');
+        const sendMessage = document.querySelector('.send-message');
+        const messageInput = document.querySelector('.chatbot-input input');
+        const messagesContainer = document.querySelector('.chatbot-messages');
+
+        const responses = {
+            // Accueil et politesse
+            'bonjour': 'Bonjour ! Je suis là pour vous guider dans tous vos projets immobiliers. Comment puis-je vous aider ?',
+            'salut': 'Salut ! Je peux vous aider pour l\'achat, la vente, la location ou l\'investissement. Que souhaitez-vous savoir ?',
+            'merci': 'Je vous en prie ! N\'hésitez pas si vous avez d\'autres questions sur l\'immobilier.',
+            'au revoir': 'Au revoir et bonne continuation dans votre projet immobilier !',
+
+            // Contact et informations pratiques
+            'contact': 'Vous pouvez nous joindre au 06 95 36 88 93 ou par email à alfredgibeauahoussinou@gmail.com Nous sommes aussi disponibles sur Instagram !',
+            'horaires': 'Notre agence est ouverte du lundi au vendredi de 9h à 18h, et le samedi sur rendez-vous. Nous pouvons aussi organiser des visites le week-end.',
+            'rendez-vous': 'Pour un rendez-vous, vous pouvez soit utiliser notre calendrier en ligne, soit nous appeler au 06 95 36 88 93. Nous nous adaptons à vos disponibilités.',
+            'adresse': 'Notre agence est située au centre-ville. L\'adresse exacte vous sera communiquée lors de la prise de rendez-vous.',
+
+            // Services immobiliers détaillés
+            'achat': 'Pour l\'achat, nous vous accompagnons dans toutes les étapes :\n- Recherche personnalisée selon vos critères\n- Visites accompagnées\n- Ngociation du prix\n- Montage du dossier de financement\n- Accompagnement jusqu\'à la signature',
+            'vente': 'Pour vendre, nous proposons un service complet :\n- Estimation gratuite et détaillée\n- Photos professionnelles\n- Diffusion sur les meilleurs supports\n- Sélection des acquéreurs\n- Négociation optimale',
+            'location': 'Nos services de location comprennent :\n- Recherche de locataires qualifiés\n- Visites organisées\n- Dossiers locataires\n- États des lieux\n- Gestion complète si souhaité',
+            'investissement': 'Nous vous conseillons sur :\n- Les meilleurs secteurs\n- La rentabilité locative\n- Les avantages fiscaux\n- Le financement optimal\n- La gestion future du bien',
+
+            // Aspects financiers détaillés
+            'prix': 'Les prix varient selon :\n- Le secteur géographique\n- Le type de bien\n- L\'état général\n- Les prestations\n- L\'environnement\nNous réalisons une estimation précise et gratuite.',
+            'estimation': 'Notre estimation gratuite analyse :\n- Les prix du marché local\n- Les ventes récentes comparables\n- L\'état du bien\n- Le potentiel d\'évolution\n- Les travaux éventuels',
+            'financement': 'Pour le financement, nous vous aidons avec :\n- La simulation de prêt\n- Le montage du dossier\n- La négociation des taux\n- L\'optimisation de l\'apport\n- Les assurances',
+            'frais': 'Détail des frais à prévoir :\n- Frais d\'agence : 3-5%\n- Frais de notaire : 7-8% (ancien) / 2-3% (neuf)\n- Frais de dossier bancaire\n- Frais de garantie\n- Assurance prêt',
+
+            // Aspects techniques détaillés
+            'diagnostic': 'Les diagnostics obligatoires comprennent :\n- DPE (performance énergétique)\n- Amiante\n- Plomb\n- Électricité\n- Gaz\n- Termites selon zones',
+            'travaux': 'Pour les travaux, nous pouvons :\n- Évaluer les besoins\n- Estimer les coûts\n- Recommander des artisans\n- Suivre le chantier\n- Vérifier la conformité',
+            'documents': 'Documents nécessaires pour une vente :\n- Titre de propriété\n- Diagnostics techniques\n- Taxes foncières\n- Charges de copropriété\n- Règlement de copropriété',
+            'délais': 'Délais moyens à prévoir :\n- Vente : 3-4 mois\n- Financement : 2-3 mois\n- Location : 2-3 semaines\n- Diagnostics : 1 semaine\n- Compromis : 2-3 semaines',
+
+            // Conseils spécifiques détaillés
+            'quartier': 'Analyse complète du quartier :\n- Transports en commun\n- Écoles et crèches\n- Commerces et services\n- Espaces verts\n- Projets urbains\n- Évolution des prix',
+            'négociation': 'Stratégie de négociation basée sur :\n- Prix du marché\n- État du bien\n- Durée de mise en vente\n- Motivation du vendeur\n- Concurrence locale',
+            'visite': 'Lors des visites, nous vérifions :\n- Orientation et luminosité\n- Isolation thermique et phonique\n- État général du bien\n- Charges et travaux\n- Environnement proche',
+            'copropriété': 'Points à vérifier en copropriété :\n- Charges courantes\n- Travaux votés et à prévoir\n- Procès-verbaux d\'AG\n- Règlement de copropriété\n- Fonds de réserve',
+
+            // Informations spécifiques
+            'parking': 'Pour le stationnement, nous vérifions :\n- Places disponibles\n- Type de parking (box, extérieur)\n- Accès et sécurité\n- Prix du marché local',
+            'jardin': 'Pour les biens avec jardin :\n- Orientation\n- Surface exacte\n- Entretien nécessaire\n- Possibilités d\'aménagement',
+            'renovation': 'Conseils rénovation :\n- Évaluation des travaux\n- Budget à prévoir\n- Aides disponibles\n- Retour sur investissement',
+            'impots': 'Aspects fiscaux :\n- Taxe foncière\n- Taxe d\'habitation\n- Plus-values\n- Déductions possibles',
+
+            // Message par défaut
+            'default': 'Je peux vous renseigner sur de nombreux aspects : achat, vente, location, investissement, financement, aspects techniques... N\'hésitez pas à me poser une question précise !',
+
+            // Questions sur les types de biens
+            'appartement': 'Pour les appartements, nous vérifions :\n- Surface habitable\n- Étage et ascenseur\n- Charges de copropriété\n- État des parties communes\n- Isolation phonique\n- Exposition et luminosité\n- Cave ou parking inclus',
+            
+            'maison': 'Pour les maisons, nous analysons :\n- Surface habitable et terrain\n- État général et toiture\n- Isolation et chauffage\n- Conformité aux normes\n- Assainissement\n- Mitoyenneté\n- Extensions possibles',
+            
+            'studio': 'Pour les studios, nous étudions :\n- Agencement optimal\n- Rangements\n- Cuisine équipée\n- Charges mensuelles\n- Facilités du quartier\n- Potentiel locatif',
+
+            // Questions sur le financement
+            'pret': 'Pour votre prêt immobilier :\n- Simulation personnalisée\n- Comparatif des banques\n- Optimisation de l\'apport\n- Assurance emprunteur\n- Garanties bancaires\n- Frais de dossier',
+            
+            'apport': 'L\'apport personnel :\n- Minimum recommandé : 10%\n- Idéal : 20% ou plus\n- Sources possibles :\n  • Épargne personnelle\n  • Donation\n  • Prêt familial\n  • Plan épargne logement',
+            
+            'taux': 'Les taux actuels varient selon :\n- Durée du prêt\n- Apport personnel\n- Profil emprunteur\n- Type de taux (fixe/variable)\n- Assurance incluse\nContactez-nous pour une simulation personnalisée.',
+
+            // Questions spécifiques sur l'investissement
+            'rentabilité': 'La rentabilité dépend de :\n- Prix d\'achat\n- Loyer potentiel\n- Charges prévisionnelles\n- Fiscalité applicable\n- Évolution du marché\n- Travaux à prévoir',
+            
+            'defiscalisation': 'Dispositifs de défiscalisation :\n- Loi Pinel\n- LMNP (Location meublée)\n- Malraux (patrimoine)\n- Denormandie (rénovation)\n- Déficit foncier',
+            
+            'patrimoine': 'Stratégies patrimoniales :\n- Diversification des biens\n- Optimisation fiscale\n- Protection familiale\n- Transmission\n- Revenus complémentaires',
+
+            // Questions juridiques
+            'compromis': 'Le compromis de vente :\n- Conditions suspensives\n- Délai de rétractation\n- Dépôt de garantie\n- Clauses particulières\n- Signatures requises',
+            
+            'notaire': 'Le rôle du notaire :\n- Vérification juridique\n- Rédaction des actes\n- Calcul des frais\n- Conservation des documents\n- Conseil aux parties',
+            
+            'sci': 'La Société Civile Immobilière :\n- Avantages fiscaux\n- Gestion familiale\n- Protection du patrimoine\n- Transmission facilitée\n- Fonctionnement',
+
+            // Questions techniques
+            'dpe': 'Le Diagnostic de Performance Énergétique :\n- Classes énergétiques (A à G)\n- Impact sur la valeur\n- Obligations légales\n- Recommandations travaux\n- Validité 10 ans',
+            
+            'renovation energetique': 'Rénovation énergétique :\n- Isolation thermique\n- Chauffage performant\n- Ventilation\n- Aides disponibles\n- Certification RGE',
+            
+            'construction': 'Pour les constructions neuves :\n- Normes RT2020\n- Garanties décennales\n- Suivi de chantier\n- Conformité PMR\n- Assurances obligatoires',
+
+            // Questions sur la location
+            'bail': 'Le contrat de location :\n- Durée légale\n- Clauses obligatoires\n- État des lieux\n- Dépôt de garantie\n- Révision du loyer',
+            
+            'garanties': 'Les garanties locatives :\n- Caution personnelle\n- Garantie Visale\n- GLI (assurance)\n- Dépôt de garantie\n- Assurance habitation',
+            
+            'gestion locative': 'Notre gestion locative comprend :\n- Recherche locataires\n- Quittancement\n- Suivi des travaux\n- Déclarations fiscales\n- Contentieux éventuel',
+
+            // Questions sur le marché
+            'tendances': 'Tendances du marché actuel :\n- Évolution des prix\n- Zones dynamiques\n- Taux des crédits\n- Nouvelles réglementations\n- Projets urbains',
+            
+            'investir': 'Meilleures zones pour investir :\n- Dynamisme économique\n- Projets d\'urbanisme\n- Transport et services\n- Rentabilité moyenne\n- Potentiel plus-value',
+
+            // Message par défaut amélioré
+            'default': 'Je peux vous renseigner sur :\n- Achat et vente\n- Location et gestion\n- Financement et fiscalité\n- Aspects techniques\n- Investissement\n- Marché immobilier\nQuel aspect vous intéresse ?',
+
+            // Questions sur les prêts spéciaux
+            'ptz': 'Le Prêt à Taux Zéro (PTZ) :\n- Pour les primo-accédants\n- Conditions de ressources\n- Zones éligibles\n- Montant maximum selon zone\n- Durée de remboursement\n- Cumul possible avec d\'autres prêts',
+            
+            'pinel': 'La Loi Pinel :\n- Réduction d\'impôts\n- Zones éligibles (A, A bis, B1)\n- Engagement de location 6, 9 ou 12 ans\n- Plafonds de loyers\n- Conditions de ressources des locataires\n- Avantages fiscaux selon durée',
+
+            // Questions sur les assurances
+            'assurance pret': 'L\'assurance prêt immobilier :\n- Garanties obligatoires\n- Garanties facultatives\n- Délégation d\'assurance\n- Comparaison des offres\n- Questionnaire médical\n- Coût et impact sur le prêt',
+            
+            'assurance habitation': 'L\'assurance habitation :\n- Garanties essentielles\n- Options recommandées\n- Franchise\n- Valeur à neuf\n- Protection juridique\n- Assistance 24/7',
+
+            // Questions sur la fiscalité
+            'taxe fonciere': 'La taxe foncière :\n- Calcul de la base\n- Taux communaux\n- Exonérations possibles\n- Abattements\n- Échéances\n- Mensualisation possible',
+            
+            'plus value': 'L\'imposition des plus-values :\n- Calcul de la plus-value\n- Abattements pour durée\n- Cas d\'exonération\n- Résidence principale\n- Taux d\'imposition\n- Prélèvements sociaux',
+
+            // Questions sur la copropri��té
+            'syndic': 'Le syndic de copropriété :\n- Rôle et missions\n- Choix du syndic\n- Honoraires\n- Assemblée générale\n- Compte séparé\n- Changement de syndic',
+            
+            'charges': 'Les charges de copropriété :\n- Charges courantes\n- Fonds de travaux\n- Provisions\n- Régularisation annuelle\n- Répartition\n- Budget prévisionnel',
+
+            // Questions sur la construction
+            'terrain': 'Pour l\'achat d\'un terrain :\n- Étude de sol\n- Viabilisation\n- PLU et règles\n- Bornage\n- Servitudes\n- Orientation',
+            
+            'maison neuve': 'Construction maison neuve :\n- Contrat CCMI\n- Garanties obligatoires\n- Étapes clés\n- Délais\n- Assurance dommages-ouvrage\n- Réception des travaux',
+
+            // Questions sur la rénovation
+            'aides renovation': 'Les aides à la rénovation :\n- MaPrimeRénov\n- CEE\n- Éco-PTZ\n- Aides locales\n- TVA réduite\n- Conditions d\'éligibilité',
+            
+            'artisans': 'Choix des artisans :\n- Certification RGE\n- Devis détaillés\n- Assurances\n- Références\n- Planning\n- Garanties',
+
+            // Questions sur la location
+            'meuble': 'Location meublée :\n- Avantages fiscaux\n- Inventaire obligatoire\n- Durée du bail\n- Mobilier requis\n- Charges récupérables\n- Régime LMNP',
+            
+            'colocation': 'La colocation :\n- Bail unique ou multiple\n- Clause de solidarité\n- Assurance habitation\n- Charges\n- Dépôt de garantie\n- Règles de vie',
+
+            // Questions sur l'investissement
+            'scpi': 'Investir en SCPI :\n- Fonctionnement\n- Types de SCPI\n- Rendement moyen\n- Fiscalité applicable\n- Frais de gestion\n- Liquidité',
+            
+            'parking investissement': 'Investir dans un parking :\n- Rentabilité moyenne\n- Zones porteuses\n- Gestion locative\n- Fiscalité\n- Charges\n- Revente',
+
+            // Questions sur le viager
+            'viager': 'Le viager :\n- Calcul du bouquet\n- Rente mensuelle\n- Viager occupé/libre\n- Fiscalité\n- Risques et garanties\n- Financement',
+            
+            'bouquet': 'Le bouquet en viager :\n- Montant conseillé\n- Négociation\n- Impact sur la rente\n- Financement possible\n- Fiscalité\n- Garanties',
+
+            // Questions sur les diagnostics
+            'termites': 'Diagnostic termites :\n- Zones concernées\n- Validité\n- Obligations\n- Traitement\n- Garanties\n- Coût moyen',
+            
+            'amiante': 'Diagnostic amiante :\n- Obligations légales\n- Parties concernées\n- Validité\n- Travaux nécessaires\n- Risques\n- Désamiantage',
+
+            // Message par défaut encore plus détaillé
+            'default': 'Je peux vous renseigner sur de nombreux aspects :\n- Achat et vente de biens\n- Location et gestion locative\n- Financement et fiscalité\n- Construction et rénovation\n- Diagnostics et travaux\n- Investissement et patrimoine\n- Assurances et garanties\n- Copropriété et charges\nQuel sujet vous intéresse ?',
+
+            // Questions sur les types de biens spécifiques
+            'loft': 'Pour les lofts, nous vérifions :\n- Volume et hauteur sous plafond\n- Luminosité naturelle\n- Possibilités d\'aménagement\n- Isolation phonique\n- Charges spécifiques\n- Conformité aux normes\n- Histoire du bâtiment',
+            
+            'duplex': 'Pour les duplex, nous analysons :\n- Communication entre les niveaux\n- Répartition des espaces\n- Isolation entre étages\n- Solidité de l\'escalier\n- Hauteur sous plafond\n- Aération des pièces\n- Optimisation thermique',
+            
+            'attique': 'Pour les appartements en attique :\n- Terrasse et vue\n- Exposition solaire\n- Isolation thermique\n- Étanchéité toiture\n- Accès privatif\n- Charges spécifiques\n- Autorisation d\'aménagement',
+
+            // Questions sur le financement avancé
+            'credit': 'Options de crédit immobilier :\n- Taux fixe ou variable\n- Durée optimale\n- Assurance emprunteur\n- Garanties bancaires\n- Frais de dossier\n- Conditions de remboursement anticipé\n- Modulation des mensualités',
+            
+            'courtier': 'Le courtier immobilier :\n- Comparaison des offres\n- Négociation des taux\n- Optimisation du dossier\n- Suivi personnalisé\n- Relation avec les banques\n- Conseils d\'experts\n- Gain de temps',
+            
+            'capacite emprunt': 'Calcul de la capacité d\'emprunt :\n- Revenus mensuels\n- Charges actuelles\n- Apport personnel\n- Taux d\'endettement\n- Reste à vivre\n- Projets futurs\n- Stabilité professionnelle',
+
+            // Questions sur l'investissement avancé
+            'rendement': 'Calcul du rendement locatif :\n- Loyer annuel brut\n- Charges propriétaire\n- Taxe foncière\n- Frais de gestion\n- Travaux prévisionnels\n- Vacance locative\n- Plus-value potentielle',
+            
+            'defiscalisation immobiliere': 'Stratégies de défiscalisation :\n- Pinel optimisé\n- LMNP amortissement\n- Déficit foncier\n- Monument historique\n- Malraux\n- Denormandie\n- Censi-Bouvard',
+            
+            'investissement locatif': 'Conseils investissement locatif :\n- Choix de l\'emplacement\n- Type de location\n- Gestion locative\n- Optimisation fiscale\n- Financement adapté\n- Rentabilité prévisionnelle\n- Stratégie patrimoniale',
+
+            // Questions sur la rénovation avancée
+            'renovation complete': 'Pour une rénovation complète :\n- Diagnostic initial\n- Budget détaillé\n- Planning travaux\n- Choix des artisans\n- Suivi de chantier\n- Conformité normes\n- Optimisation énergétique',
+            
+            'renovation cuisine': 'Rénovation de cuisine :\n- Plan d\'aménagement\n- Plomberie\n- Électricité\n- Revêtements\n- Équipements\n- Ventilation\n- Budget moyen',
+            
+            'renovation salle de bain': 'Rénovation salle de bain :\n- Étanchéité\n- Ventilation\n- Plomberie\n- Électricité aux normes\n- Revêtements adaptés\n- Sanitaires\n- Optimisation espace',
+
+            // Questions sur la gestion locative avancée
+            'gestion complete': 'Notre gestion locative complète :\n- Recherche locataires\n- Étude des dossiers\n- États des lieux\n- Quittancement\n- Suivi des travaux\n- Gestion administrative\n- Contentieux éventuel',
+            
+            'impayés': 'Gestion des impayés :\n- Relance amiable\n- Procédure contentieuse\n- Assurance loyers impayés\n- Protection juridique\n- Recouvrement\n- Expulsion si nécessaire\n- Prévention',
+            
+            'fiscalite location': 'Fiscalité locative :\n- Régime fiscal adapté\n- Charges déductibles\n- Amortissements possibles\n- Déclarations obligatoires\n- Optimisation fiscale\n- TVA si applicable\n- Plus-values',
+
+            // Questions sur les aspects juridiques avancés
+            'servitude': 'Les servitudes immobilières :\n- Types de servitudes\n- Droits et obligations\n- Impact sur la valeur\n- Modification possible\n- Extinction\n- Contentieux\n- Inscription cadastrale',
+            
+            'urbanisme': 'Règles d\'urbanisme :\n- PLU applicable\n- COS et emprise\n- Hauteur autorisée\n- Distances limites\n- Zones protégées\n- Permis nécessaires\n- Recours possibles',
+            
+            'mitoyennete': 'Règles de mitoyenneté :\n- Droits et devoirs\n- Entretien mur mitoyen\n- Surélévation\n- Charges partagées\n- Abandon mitoyenneté\n- Contentieux\n- Solutions amiables',
+
+            // Message par défaut encore plus complet
+            'default': 'Je peux vous renseigner sur de nombreux aspects :\n- Achat et vente de biens\n- Types de biens spécifiques\n- Financement et fiscalité\n- Investissement et rentabilité\n- Rénovation et travaux\n- Gestion locative\n- Aspects juridiques\n- Urbanisme et règlementation\nQuel sujet vous intéresse ?'
+        };
+
+        function addMessage(message, isUser = false) {
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${isUser ? 'user' : 'bot'}`;
+            messageDiv.textContent = message;
+            messagesContainer.appendChild(messageDiv);
+            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+        }
+
+        function getResponse(message) {
+            const lowercaseMessage = message.toLowerCase();
+            for (const [key, value] of Object.entries(responses)) {
+                if (lowercaseMessage.includes(key)) {
+                    return value;
+                }
+            }
+            return responses.default;
+        }
+
+        chatbotToggle.addEventListener('click', () => {
+            chatbotBox.style.display = chatbotBox.style.display === 'none' ? 'flex' : 'none';
+        });
+
+        closeChat.addEventListener('click', () => {
+            chatbotBox.style.display = 'none';
+        });
+
+        function handleMessage() {
+            const message = messageInput.value.trim();
+            if (message) {
+                addMessage(message, true);
+                messageInput.value = '';
+                
+                setTimeout(() => {
+                    const response = getResponse(message);
+                    addMessage(response);
+                }, 500);
+            }
+        }
+
+        sendMessage.addEventListener('click', handleMessage);
+
+        messageInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                handleMessage();
+            }
+        });
+    });
     </script>
 </body>
 </html>
