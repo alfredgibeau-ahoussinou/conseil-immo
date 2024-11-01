@@ -90,6 +90,57 @@
                 padding: 0 1.5rem;
             }
         }
+
+        .profile-avatar {
+            width: 100px;
+            height: 100px;
+            margin: 0 auto 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, #3498db, #2980b9);
+            border-radius: 50%;
+            color: white;
+        }
+
+        .profile-avatar i {
+            font-size: 50px;
+            opacity: 0.9;
+        }
+
+        .profile-info {
+            text-align: center;
+        }
+
+        .profile-info h2 {
+            color: #2c3e50;
+            font-size: 24px;
+            margin-bottom: 10px;
+        }
+
+        .profile-info p {
+            color: #7f8c8d;
+            font-size: 16px;
+        }
+
+        @media (max-width: 768px) {
+            .profile-avatar {
+                width: 80px;
+                height: 80px;
+            }
+
+            .profile-avatar i {
+                font-size: 40px;
+            }
+
+            .profile-info h2 {
+                font-size: 20px;
+            }
+
+            .profile-info p {
+                font-size: 14px;
+            }
+        }
     </style>
 </head>
 <body>
@@ -111,6 +162,9 @@
     <main class="profile-section">
         <div class="profile-header">
             <div class="profile-info">
+                <div class="profile-avatar">
+                    <i class="fas fa-user-circle"></i>
+                </div>
                 <h2 id="userName">Chargement...</h2>
                 <p id="userEmail">Chargement...</p>
             </div>
@@ -220,60 +274,104 @@
             }
         });
 
-        // Enregistrer les modifications du profil
+        // Enregistrer les modifications du profil avec confirmation
         document.getElementById('profileForm').addEventListener('submit', async (e) => {
             e.preventDefault();
             const user = auth.currentUser;
             if (user) {
+                // Récupérer toutes les valeurs du formulaire
                 const userData = {
-                    fullName: document.getElementById('fullName').value,
-                    phone: document.getElementById('phone').value,
-                    address: document.getElementById('address').value,
-                    city: document.getElementById('city').value,
-                    zipCode: document.getElementById('zipCode').value,
+                    fullName: document.getElementById('fullName').value.trim(),
+                    phone: document.getElementById('phone').value.trim(),
+                    address: document.getElementById('address').value.trim(),
+                    city: document.getElementById('city').value.trim(),
+                    zipCode: document.getElementById('zipCode').value.trim(),
                     emailNotif: document.getElementById('emailNotif').checked,
                     propertyAlerts: document.getElementById('propertyAlerts').checked,
                     darkMode: document.getElementById('darkMode').checked,
-                    updatedAt: new Date()
+                    updatedAt: new Date(),
+                    email: user.email // Ajouter l'email pour référence
                 };
 
                 try {
+                    // Mettre à jour dans Firestore
                     await db.collection('users').doc(user.uid).set(userData, { merge: true });
-                    await user.updateProfile({ displayName: userData.fullName });
-                    showSuccessMessage('Profil mis à jour avec succès !');
                     
+                    // Mettre à jour le profil Firebase Auth
+                    await user.updateProfile({ 
+                        displayName: userData.fullName
+                    });
+
                     // Ajouter l'activité à l'historique
-                    addActivity(user.uid, 'Mise à jour du profil');
+                    await addActivity(user.uid, 'Mise à jour du profil');
+
+                    // Afficher le message de succès avec animation
+                    showSuccessMessage('✓ Profil mis à jour avec succès !');
+
+                    // Mettre à jour l'affichage du nom d'utilisateur
+                    document.getElementById('userName').textContent = userData.fullName || 'Utilisateur';
+
                 } catch (error) {
                     console.error('Erreur lors de la mise à jour du profil :', error);
-                    alert('Erreur lors de la mise à jour du profil.');
+                    showErrorMessage('Une erreur est survenue lors de la mise à jour du profil.');
                 }
             }
         });
 
-        // Fonctions utilitaires
+        // Fonction améliorée pour afficher le message de succès
         function showSuccessMessage(message) {
             const successMessage = document.getElementById('successMessage');
             successMessage.textContent = message;
+            successMessage.style.backgroundColor = '#2ecc71';
             successMessage.style.display = 'block';
+            
+            // Animation de fade in
+            successMessage.style.opacity = '0';
+            successMessage.style.transform = 'translateY(-20px)';
+            
+            setTimeout(() => {
+                successMessage.style.opacity = '1';
+                successMessage.style.transform = 'translateY(0)';
+            }, 10);
+
+            // Disparition après 3 secondes
+            setTimeout(() => {
+                successMessage.style.opacity = '0';
+                successMessage.style.transform = 'translateY(-20px)';
+                setTimeout(() => {
+                    successMessage.style.display = 'none';
+                }, 300);
+            }, 3000);
+        }
+
+        // Fonction pour afficher les messages d'erreur
+        function showErrorMessage(message) {
+            const successMessage = document.getElementById('successMessage');
+            successMessage.textContent = message;
+            successMessage.style.backgroundColor = '#e74c3c';
+            successMessage.style.display = 'block';
+            
             setTimeout(() => {
                 successMessage.style.display = 'none';
             }, 3000);
         }
 
+        // Fonction améliorée pour ajouter une activité
         async function addActivity(userId, action) {
             try {
                 await db.collection('activities').add({
                     userId,
                     action,
-                    timestamp: new Date()
+                    timestamp: new Date(),
+                    details: 'Mise à jour des informations du profil'
                 });
-                loadActivityHistory(userId);
+                await loadActivityHistory(userId);
             } catch (error) {
                 console.error('Erreur lors de l\'ajout de l\'activité :', error);
             }
         }
 
+        // Fonction améliorée pour charger l'historique
         async function loadActivityHistory(userId) {
             const activityList = document.getElementById('activityList');
             activityList.innerHTML = '';
@@ -285,6 +383,11 @@
                     .limit(10)
                     .get();
 
+                if (activities.empty) {
+                    activityList.innerHTML = '<div class="activity-item">Aucune activité récente</div>';
+                    return;
+                }
+
                 activities.forEach(doc => {
                     const activity = doc.data();
                     const date = activity.timestamp.toDate();
@@ -293,11 +396,13 @@
                     activityElement.innerHTML = `
                         <p>${activity.action}</p>
                         <small>${date.toLocaleDateString()} ${date.toLocaleTimeString()}</small>
+                        ${activity.details ? `<p class="activity-details">${activity.details}</p>` : ''}
                     `;
                     activityList.appendChild(activityElement);
                 });
             } catch (error) {
                 console.error('Erreur lors du chargement de l\'historique :', error);
+                activityList.innerHTML = '<div class="activity-item error">Erreur lors du chargement de l\'historique</div>';
             }
         }
 

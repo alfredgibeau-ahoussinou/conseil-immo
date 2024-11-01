@@ -51,20 +51,100 @@ export function signUp(username, email, password) {
 
 // Fonction pour la connexion
 export function signIn(email, password) {
-  console.log("Tentative de connexion avec:", email);
-  signInWithEmailAndPassword(auth, email, password)
-    .then((userCredential) => {
-      // Connexion réussie
-      const user = userCredential.user;
-      console.log("Utilisateur connecté :", user);
-      // Rediriger tous les utilisateurs vers le dashboard
-      window.location.href = "dashboard.html";
-    })
-    .catch((error) => {
-      // Erreur lors de la connexion
-      console.error("Erreur de connexion :", error);
-      alert("Erreur de connexion : " + error.message);
-    });
+    console.log("Tentative de connexion avec:", email);
+    signInWithEmailAndPassword(auth, email, password)
+        .then((userCredential) => {
+            // Connexion réussie
+            const user = userCredential.user;
+            console.log("Utilisateur connecté :", user);
+            window.location.href = "dashboard.html";
+        })
+        .catch((error) => {
+            console.error("Erreur de connexion :", error);
+            let messageErreur;
+            
+            // Traduire les messages d'erreur Firebase
+            switch (error.code) {
+                case 'auth/invalid-login-credentials':
+                    messageErreur = "Email ou mot de passe incorrect.";
+                    break;
+                case 'auth/user-not-found':
+                    messageErreur = "Aucun compte ne correspond à cet email.";
+                    break;
+                case 'auth/wrong-password':
+                    messageErreur = "Mot de passe incorrect.";
+                    break;
+                case 'auth/invalid-email':
+                    messageErreur = "L'adresse email n'est pas valide.";
+                    break;
+                case 'auth/user-disabled':
+                    messageErreur = "Ce compte a été désactivé.";
+                    break;
+                case 'auth/too-many-requests':
+                    messageErreur = "Trop de tentatives de connexion. Veuillez réessayer plus tard.";
+                    break;
+                default:
+                    messageErreur = "Une erreur s'est produite lors de la connexion. Veuillez réessayer.";
+            }
+            
+            // Créer et afficher le message d'erreur animé
+            const errorDiv = document.createElement('div');
+            errorDiv.className = 'error-message';
+            errorDiv.textContent = messageErreur;
+            
+            // Ajouter les styles pour l'animation
+            errorDiv.style.cssText = `
+                position: fixed;
+                top: 20px;
+                left: 50%;
+                transform: translateX(-50%);
+                background-color: #e74c3c;
+                color: white;
+                padding: 15px 30px;
+                border-radius: 5px;
+                box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+                z-index: 1000;
+                animation: slideDown 0.5s ease-out, fadeOut 0.5s ease-out 2.5s forwards;
+            `;
+
+            // Ajouter les keyframes pour l'animation
+            const style = document.createElement('style');
+            style.textContent = `
+                @keyframes slideDown {
+                    from {
+                        transform: translate(-50%, -100%);
+                        opacity: 0;
+                    }
+                    to {
+                        transform: translate(-50%, 0);
+                        opacity: 1;
+                    }
+                }
+                @keyframes fadeOut {
+                    from {
+                        opacity: 1;
+                        transform: translate(-50%, 0);
+                    }
+                    to {
+                        opacity: 0;
+                        transform: translate(-50%, -20px);
+                    }
+                }
+            `;
+            document.head.appendChild(style);
+            document.body.appendChild(errorDiv);
+
+            // Supprimer le message après l'animation
+            setTimeout(() => {
+                errorDiv.remove();
+                style.remove();
+            }, 3000);
+
+            // Ajouter l'effet de secousse sur les champs de formulaire
+            const form = document.getElementById('login-form');
+            form.classList.add('shake');
+            setTimeout(() => form.classList.remove('shake'), 500);
+        });
 }
 
 // Fonction pour la connexion avec Google
@@ -105,16 +185,16 @@ export function signInWithApple() {
 
 // Fonction pour réinitialiser le mot de passe
 export function resetPassword(email) {
-    const auth = getAuth();
-    sendPasswordResetEmail(auth, email)
+    console.log("Tentative de réinitialisation du mot de passe pour:", email);
+    return sendPasswordResetEmail(auth, email)
         .then(() => {
-            alert("Un email de réinitialisation a été envoyé à votre adresse email.");
-            // Retour à la page de connexion
-            document.getElementById('mot-de-passe-oublie').style.display = 'none';
-            document.getElementById('connexion').style.display = 'block';
+            console.log("Email de réinitialisation envoyé avec succès");
+            // Retourner une promesse résolue
+            return Promise.resolve();
         })
         .catch((error) => {
-            console.error("Erreur lors de la réinitialisation du mot de passe :", error);
-            alert("Erreur : " + error.message);
+            console.error("Erreur lors de la réinitialisation :", error);
+            // Retourner une promesse rejetée
+            return Promise.reject(error);
         });
 }

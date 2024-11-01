@@ -512,9 +512,9 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .chatbot-toggle {
-    width: 75px;
-    height: 75px;
-    background: linear-gradient(135deg, #3498db, #2980b9);
+    width: 65px;
+    height: 65px;
+    background: linear-gradient(145deg, #3498db, #2980b9);
     border-radius: 50%;
     display: flex;
     align-items: center;
@@ -522,6 +522,7 @@ h1, h2, h3, h4, h5, h6 {
     cursor: pointer;
     box-shadow: 0 4px 15px rgba(52, 152, 219, 0.3);
     transition: all 0.3s ease;
+    animation: pulse 2s infinite;
 }
 
 .chatbot-toggle:hover {
@@ -531,29 +532,28 @@ h1, h2, h3, h4, h5, h6 {
 
 .chatbot-toggle i {
     color: white;
-    font-size: 32px;
+    font-size: 28px;
     text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
 }
 
 .chatbot-box {
     position: absolute;
-    bottom: 95px;
+    bottom: 85px;
     right: 0;
-    width: 400px;
-    height: 600px;
-    background-color: #fff;
+    width: 380px;
+    height: 550px;
+    background: linear-gradient(to bottom, #ffffff, #f8f9fa);
     border-radius: 20px;
     box-shadow: 0 5px 25px rgba(0,0,0,0.15);
     display: flex;
     flex-direction: column;
     overflow: hidden;
-    transition: all 0.3s ease;
-    transform-origin: bottom right;
+    animation: slideIn 0.3s ease-out;
 }
 
 .chatbot-header {
-    padding: 25px;
-    background: linear-gradient(135deg, #3498db, #2980b9);
+    padding: 20px;
+    background: linear-gradient(145deg, #3498db, #2980b9);
     color: white;
     border-radius: 20px 20px 0 0;
     display: flex;
@@ -564,7 +564,7 @@ h1, h2, h3, h4, h5, h6 {
 
 .chatbot-header h3 {
     margin: 0;
-    font-size: 20px;
+    font-size: 18px;
     font-weight: 600;
     text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
 }
@@ -576,21 +576,17 @@ h1, h2, h3, h4, h5, h6 {
     font-size: 24px;
     cursor: pointer;
     transition: transform 0.3s ease;
-    padding: 0;
-    width: 30px;
-    height: 30px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    opacity: 0.8;
 }
 
 .close-chat:hover {
     transform: rotate(90deg);
+    opacity: 1;
 }
 
 .chatbot-messages {
     flex-grow: 1;
-    padding: 25px;
+    padding: 20px;
     overflow-y: auto;
     background-color: #f8f9fa;
     scroll-behavior: smooth;
@@ -598,42 +594,32 @@ h1, h2, h3, h4, h5, h6 {
 
 .message {
     margin-bottom: 15px;
-    padding: 15px 20px;
-    border-radius: 18px;
-    max-width: 90%;
-    font-size: 16px;
+    padding: 12px 16px;
+    border-radius: 15px;
+    max-width: 85%;
+    font-size: 14px;
     line-height: 1.4;
-    position: relative;
-    animation: messageAppear 0.3s ease;
-}
-
-@keyframes messageAppear {
-    from {
-        opacity: 0;
-        transform: translateY(10px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
 }
 
 .message.bot {
-    background-color: #e9ecef;
+    background: linear-gradient(145deg, #f0f2f5, #e9ecef);
     color: #2c3e50;
     margin-right: auto;
     border-bottom-left-radius: 5px;
+    animation: slideFromLeft 0.3s ease-out;
 }
 
 .message.user {
-    background: linear-gradient(135deg, #3498db, #2980b9);
+    background: linear-gradient(145deg, #3498db, #2980b9);
     color: white;
     margin-left: auto;
     border-bottom-right-radius: 5px;
+    animation: slideFromRight 0.3s ease-out;
 }
 
 .chatbot-input {
-    padding: 25px;
+    padding: 20px;
     display: flex;
     gap: 12px;
     border-top: 1px solid #eee;
@@ -642,70 +628,72 @@ h1, h2, h3, h4, h5, h6 {
 
 .chatbot-input input {
     flex-grow: 1;
-    padding: 15px 20px;
+    padding: 12px 18px;
     border: 2px solid #e9ecef;
     border-radius: 25px;
     outline: none;
-    font-size: 16px;
+    font-size: 14px;
     transition: all 0.3s ease;
+    background-color: #f8f9fa;
 }
 
 .chatbot-input input:focus {
     border-color: #3498db;
     box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
+    background-color: white;
 }
 
 .send-message {
-    background: linear-gradient(135deg, #3498db, #2980b9);
-    color: white;
+    width: 45px;
+    height: 45px;
+    background: linear-gradient(145deg, #3498db, #2980b9);
     border: none;
-    width: 50px;
-    height: 50px;
     border-radius: 50%;
-    cursor: pointer;
+    color: white;
     display: flex;
     align-items: center;
     justify-content: center;
+    cursor: pointer;
     transition: all 0.3s ease;
     box-shadow: 0 2px 5px rgba(0,0,0,0.1);
 }
 
 .send-message:hover {
-    transform: scale(1.1);
+    transform: scale(1.1) rotate(5deg);
     box-shadow: 0 4px 10px rgba(0,0,0,0.2);
 }
 
 .send-message i {
-    font-size: 20px;
+    font-size: 18px;
 }
 
+/* Animations */
+@keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+    100% { transform: scale(1); }
+}
+
+@keyframes slideIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes slideFromLeft {
+    from { opacity: 0; transform: translateX(-20px); }
+    to { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes slideFromRight {
+    from { opacity: 0; transform: translateX(20px); }
+    to { opacity: 1; transform: translateX(0); }
+}
+
+/* Styles pour mobile */
 @media (max-width: 768px) {
     .chatbot-box {
-        width: calc(100vw - 30px);
-        height: 80vh;
-        bottom: 90px;
-        right: 20px;
-    }
-
-    .chatbot-toggle {
-        width: 65px;
-        height: 65px;
-    }
-
-    .chatbot-toggle i {
-        font-size: 28px;
-    }
-
-    .message {
-        font-size: 15px;
-        padding: 12px 16px;
-    }
-}
-
-/* Modifier les styles du chatbot pour mobile */
-@media (max-width: 768px) {
-    .chatbot-container {
-        bottom: 20px;
+        width: calc(100vw - 40px);
+        height: 70vh;
         right: 20px;
     }
 
@@ -717,50 +705,59 @@ h1, h2, h3, h4, h5, h6 {
     .chatbot-toggle i {
         font-size: 24px;
     }
+}
+
+/* Styles pour mobile du chatbot */
+@media (max-width: 768px) {
+    .chatbot-container {
+        bottom: 10px;
+        right: 10px;
+    }
+
+    .chatbot-toggle {
+        width: 45px;
+        height: 45px;
+    }
+
+    .chatbot-toggle i {
+        font-size: 18px;
+    }
 
     .chatbot-box {
-        position: fixed;
-        bottom: 90px;
-        right: 10px;
-        width: 300px;
+        width: 280px;
         height: 400px;
-        margin: 0;
-        border-radius: 15px;
+        bottom: 60px;
+        right: 0;
+        border-radius: 12px;
     }
 
     .chatbot-header {
-        padding: 12px;
-        border-radius: 15px 15px 0 0;
+        padding: 10px;
+        border-radius: 12px 12px 0 0;
     }
 
     .chatbot-header h3 {
-        font-size: 16px;
+        font-size: 14px;
     }
 
     .chatbot-messages {
-        padding: 12px;
-        height: calc(400px - 110px);
+        padding: 10px;
     }
 
     .message {
-        font-size: 14px;
-        padding: 8px 12px;
+        font-size: 13px;
+        padding: 8px 10px;
         max-width: 85%;
+        margin-bottom: 8px;
     }
 
     .chatbot-input {
-        padding: 10px;
-        position: absolute;
-        bottom: 0;
-        left: 0;
-        right: 0;
-        background: white;
-        border-radius: 0 0 15px 15px;
+        padding: 8px;
     }
 
     .chatbot-input input {
         padding: 8px 12px;
-        font-size: 14px;
+        font-size: 13px;
     }
 
     .send-message {
@@ -774,22 +771,24 @@ h1, h2, h3, h4, h5, h6 {
 
     .close-chat {
         padding: 8px;
-        font-size: 20px;
+        margin: -8px;
+        font-size: 18px;
     }
 }
 
-/* Ajouter des styles pour l'animation de fermeture */
-@media (max-width: 768px) {
-    .chatbot-box.closing {
-        animation: slideDown 0.3s ease;
+/* Ajustement pour les très petits écrans */
+@media (max-width: 320px) {
+    .chatbot-box {
+        width: 260px;
+        height: 350px;
     }
 
-    @keyframes slideDown {
-        from {
-            transform: translateY(0);
-        }
-        to {
-            transform: translateY(100%);
-        }
+    .chatbot-toggle {
+        width: 40px;
+        height: 40px;
+    }
+
+    .chatbot-toggle i {
+        font-size: 16px;
     }
 }

@@ -18,10 +18,13 @@ body {
     border-radius: 10px;
     box-shadow: 0 5px 15px rgba(0,0,0,0.2);
     overflow: hidden;
+    animation: slideInScale 0.6s ease-out;
+    transform-origin: center;
 }
 
 .auth-section {
     padding: 2rem;
+    animation: fadeInUp 0.5s ease-out;
 }
 
 .auth-section h2 {
@@ -38,7 +41,14 @@ body {
 
 .form-group {
     margin-bottom: 1rem;
+    opacity: 0;
+    animation: fadeInStagger 0.5s ease-out forwards;
 }
+
+.form-group:nth-child(1) { animation-delay: 0.2s; }
+.form-group:nth-child(2) { animation-delay: 0.3s; }
+.form-group:nth-child(3) { animation-delay: 0.4s; }
+.form-group:nth-child(4) { animation-delay: 0.5s; }
 
 .form-group label {
     display: block;
@@ -61,6 +71,19 @@ body {
     outline: none;
     border-color: #3498db;
     box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.2);
+    animation: inputFocus 0.3s ease-out forwards;
+}
+
+@keyframes inputFocus {
+    0% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.02);
+    }
+    100% {
+        transform: scale(1);
+    }
 }
 
 .auth-button {
@@ -76,6 +99,8 @@ body {
     text-transform: uppercase;
     letter-spacing: 0.5px;
     margin-top: 1rem;
+    opacity: 0;
+    animation: fadeInUp 0.5s ease-out 0.6s forwards;
 }
 
 .auth-button:hover {
@@ -91,6 +116,8 @@ body {
     text-align: center;
     margin-top: 1rem;
     font-size: 0.9rem;
+    opacity: 0;
+    animation: fadeIn 0.5s ease-out 0.7s forwards;
 }
 
 .switch-form a {
@@ -274,5 +301,353 @@ body {
 @media (max-width: 768px) {
     .logo img {
         max-height: 40px; /* Taille légèrement réduite pour les écrans mobiles */
+    }
+}
+
+/* Styles pour le lien "Mot de passe oublié" */
+.forgot-password {
+    text-align: center;
+    margin-top: 15px;
+    font-size: 14px;
+}
+
+.forgot-password a {
+    color: #3498db;
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.forgot-password a:hover {
+    color: #2980b9;
+    text-decoration: underline;
+}
+
+/* Animation pour les transitions entre les sections */
+.auth-section {
+    transition: all 0.3s ease;
+}
+
+/* Style pour le formulaire de réinitialisation */
+#reset-password-form {
+    max-width: 400px;
+    margin: 0 auto;
+}
+
+#reset-password-form .form-group {
+    margin-bottom: 20px;
+}
+
+/* Message de confirmation */
+.reset-confirmation {
+    background-color: #2ecc71;
+    color: white;
+    padding: 10px;
+    border-radius: 5px;
+    text-align: center;
+    margin-bottom: 15px;
+    display: none;
+}
+
+/* Ajouter l'animation de secousse pour le formulaire */
+@keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
+    20%, 40%, 60%, 80% { transform: translateX(5px); }
+}
+
+.shake {
+    animation: shake 0.5s cubic-bezier(.36,.07,.19,.97) both;
+    transform: translate3d(0, 0, 0);
+    backface-visibility: hidden;
+    perspective: 1000px;
+}
+
+/* Style pour le message d'erreur */
+.error-message {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 14px;
+    font-weight: 500;
+    text-align: center;
+}
+
+/* Ajouter ces styles pour les animations */
+.auth-section {
+    opacity: 1;
+    transform: translateY(0);
+    transition: all 0.5s ease;
+}
+
+.auth-section.fade-out {
+    opacity: 0;
+    transform: translateY(-20px);
+}
+
+.auth-section.fade-in {
+    animation: fadeInUp 0.5s ease forwards;
+}
+
+.auth-button {
+    position: relative;
+    overflow: hidden;
+}
+
+.auth-button::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    transition: width 0.6s ease, height 0.6s ease;
+}
+
+.auth-button:active::after {
+    width: 300px;
+    height: 300px;
+    opacity: 0;
+}
+
+/* Animation pour le chargement */
+.auth-button.loading {
+    background: linear-gradient(45deg, #3498db, #2980b9);
+    pointer-events: none;
+}
+
+.auth-button.loading::before {
+    content: '';
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    border: 3px solid #ffffff;
+    border-top-color: transparent;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+/* Animations pour les transitions */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* Animation pour le succès */
+.success-animation {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: linear-gradient(45deg, #2ecc71, #27ae60);
+    color: white;
+    padding: 20px 40px;
+    border-radius: 10px;
+    font-size: 18px;
+    opacity: 0;
+    animation: successPop 2s ease forwards;
+    z-index: 1000;
+}
+
+@keyframes successPop {
+    0% {
+        opacity: 0;
+        transform: translate(-50%, -40%);
+    }
+    20% {
+        opacity: 1;
+        transform: translate(-50%, -50%);
+    }
+    80% {
+        opacity: 1;
+        transform: translate(-50%, -50%);
+    }
+    100% {
+        opacity: 0;
+        transform: translate(-50%, -60%);
+    }
+}
+
+/* Animation pour l'erreur */
+.error-animation {
+    position: fixed;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: linear-gradient(45deg, #e74c3c, #c0392b);
+    color: white;
+    padding: 15px 30px;
+    border-radius: 8px;
+    font-size: 16px;
+    opacity: 0;
+    animation: errorSlide 3s ease forwards;
+    z-index: 1000;
+}
+
+@keyframes errorSlide {
+    0% {
+        opacity: 0;
+        transform: translate(-50%, -100%);
+    }
+    15% {
+        opacity: 1;
+        transform: translate(-50%, 0);
+    }
+    85% {
+        opacity: 1;
+        transform: translate(-50%, 0);
+    }
+    100% {
+        opacity: 0;
+        transform: translate(-50%, -100%);
+    }
+}
+
+/* Animation pour les transitions entre sections */
+.section-transition {
+    animation: sectionFade 0.3s ease;
+}
+
+@keyframes sectionFade {
+    from {
+        opacity: 0;
+        transform: translateX(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+/* Ajouter ces animations pour les transitions et apparitions */
+.auth-container {
+    animation: slideInScale 0.6s ease-out;
+    transform-origin: center;
+}
+
+.auth-section {
+    animation: fadeInUp 0.5s ease-out;
+}
+
+.form-group {
+    opacity: 0;
+    animation: fadeInStagger 0.5s ease-out forwards;
+}
+
+.form-group:nth-child(1) { animation-delay: 0.2s; }
+.form-group:nth-child(2) { animation-delay: 0.3s; }
+.form-group:nth-child(3) { animation-delay: 0.4s; }
+.form-group:nth-child(4) { animation-delay: 0.5s; }
+
+.auth-button {
+    opacity: 0;
+    animation: fadeInUp 0.5s ease-out 0.6s forwards;
+}
+
+.switch-form {
+    opacity: 0;
+    animation: fadeIn 0.5s ease-out 0.7s forwards;
+}
+
+/* Keyframes pour les animations */
+@keyframes slideInScale {
+    0% {
+        transform: scale(0.9) translateY(20px);
+        opacity: 0;
+    }
+    100% {
+        transform: scale(1) translateY(0);
+        opacity: 1;
+    }
+}
+
+@keyframes fadeInUp {
+    0% {
+        transform: translateY(20px);
+        opacity: 0;
+    }
+    100% {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+@keyframes fadeInStagger {
+    0% {
+        transform: translateX(-20px);
+        opacity: 0;
+    }
+    100% {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+@keyframes fadeIn {
+    0% {
+        opacity: 0;
+    }
+    100% {
+        opacity: 1;
+    }
+}
+
+/* Animation pour les transitions entre sections */
+.auth-section.slide-out {
+    animation: slideOut 0.3s ease-out forwards;
+}
+
+.auth-section.slide-in {
+    animation: slideIn 0.3s ease-out forwards;
+}
+
+@keyframes slideOut {
+    0% {
+        transform: translateX(0);
+        opacity: 1;
+    }
+    100% {
+        transform: translateX(-50px);
+        opacity: 0;
+    }
+}
+
+@keyframes slideIn {
+    0% {
+        transform: translateX(50px);
+        opacity: 0;
+    }
+    100% {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+/* Animation pour le focus des inputs */
+.form-group input:focus {
+    animation: inputFocus 0.3s ease-out forwards;
+}
+
+@keyframes inputFocus {
+    0% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.02);
+    }
+    100% {
+        transform: scale(1);
     }
 }
