@@ -19,7 +19,7 @@
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            background-color: rgba(76, 175, 80, 0.9);
+            background-color: var(--primary-color);
             color: white;
             padding: 20px;
             border-radius: 10px;
@@ -33,8 +33,275 @@
             0%, 100% { opacity: 0; }
             20%, 80% { opacity: 1; }
         }
+
+        .terms-modal {
+            display: none;
+            position: fixed;
+            z-index: 2000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.7);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .terms-modal.show {
+            opacity: 1;
+        }
+
+        .terms-content {
+            background-color: #fff;
+            margin: 5% auto;
+            padding: 0;
+            width: 90%;
+            max-width: 800px;
+            max-height: 90vh;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            position: relative;
+            transform: translateY(-20px);
+            opacity: 0;
+            transition: all 0.3s ease;
+        }
+
+        .terms-modal.show .terms-content {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        .terms-header {
+            padding: 20px;
+            background-color: var(--primary-color);
+            color: white;
+            border-radius: 10px 10px 0 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .terms-header h2 {
+            margin: 0;
+            font-size: 1.5rem;
+            color: white;
+        }
+
+        .close-terms {
+            color: white;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+
+        .close-terms:hover {
+            transform: rotate(90deg);
+        }
+
+        .terms-body {
+            padding: 20px;
+            overflow-y: auto;
+            max-height: calc(90vh - 140px);
+        }
+
+        .terms-body h3 {
+            color: var(--primary-color);
+            margin-top: 1.5rem;
+        }
+
+        .terms-body p, .terms-body ul {
+            margin-bottom: 1rem;
+            line-height: 1.6;
+        }
+
+        .terms-body ul {
+            padding-left: 20px;
+        }
+
+        .terms-body li {
+            margin-bottom: 0.5rem;
+        }
+
+        .terms-accept {
+            text-align: center;
+            margin-top: 2rem;
+            padding-top: 1rem;
+            border-top: 1px solid #eee;
+        }
+
+        .accept-button {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .accept-button:hover {
+            background-color: var(--hover-color);
+            transform: translateY(-2px);
+        }
+
+        @media (max-width: 768px) {
+            .terms-content {
+                margin: 10% auto;
+                width: 95%;
+            }
+
+            .terms-header h2 {
+                font-size: 1.2rem;
+            }
+
+            .terms-body {
+                padding: 15px;
+            }
+        }
+
+        .faq-container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .faq-item {
+            background: white;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+
+        .faq-question {
+            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .faq-question:hover {
+            background-color: rgba(0,100,0,0.05);
+        }
+
+        .faq-question h3 {
+            margin: 0;
+            font-size: 1.1rem;
+            color: var(--primary-color);
+        }
+
+        .faq-toggle {
+            font-size: 1.5rem;
+            color: var(--primary-color);
+            transition: transform 0.3s ease;
+        }
+
+        .faq-item.active .faq-toggle {
+            transform: rotate(45deg);
+        }
+
+        .faq-answer {
+            padding: 0 20px;
+            max-height: 0;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .faq-item.active .faq-answer {
+            padding: 20px;
+            max-height: 1000px;
+        }
+
+        .testimonials-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            overflow: hidden;
+        }
+
+        .testimonial-slider {
+            display: flex;
+            transition: transform 0.5s ease;
+        }
+
+        .testimonial {
+            min-width: 100%;
+            padding: 20px;
+        }
+
+        .testimonial-content {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            text-align: center;
+            transition: transform 0.3s ease;
+            position: relative;
+            margin: 20px;
+        }
+
+        .testimonial-content:hover {
+            transform: translateY(-5px);
+        }
+
+        .quote-icon {
+            color: var(--primary-color);
+            font-size: 2rem;
+            margin-bottom: 20px;
+            opacity: 0.6;
+        }
+
+        .testimonial-text {
+            font-style: italic;
+            margin-bottom: 20px;
+            color: #555;
+            font-size: 1.1rem;
+            line-height: 1.6;
+        }
+
+        .testimonial-info {
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid #eee;
+        }
+
+        .testimonial-author {
+            color: var(--primary-color);
+            margin-bottom: 5px;
+            font-size: 1.1rem;
+        }
+
+        .testimonial-location {
+            color: #777;
+            font-size: 0.9rem;
+        }
+
+        .testimonial-dots {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+        }
+
+        .dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: #ddd;
+            margin: 0 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .dot.active {
+            background: var(--primary-color);
+        }
     </style>
     <link rel="icon" type="image/png" href="Vista Logos/logo-transparent-png.png">
+    <link rel="stylesheet" href="animations.css">
 </head>
 <body>
     <header>
@@ -141,6 +408,94 @@
             </div>
         </section>
 
+        <!-- Ajouter après la section conseils et avant la section contact -->
+        <section id="faq">
+            <h2>Questions Fréquentes</h2>
+            <div class="faq-container">
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <h3>Comment estimer mon bien immobilier ?</h3>
+                        <span class="faq-toggle">+</span>
+                    </div>
+                    <div class="faq-answer">
+                        <p>Notre équipe d'experts utilise une méthode d'estimation précise basée sur plusieurs critères : localisation, surface, état du bien, tendances du marché local, etc.</p>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <h3>Quels sont les frais de notaire ?</h3>
+                        <span class="faq-toggle">+</span>
+                    </div>
+                    <div class="faq-answer">
+                        <p>Les frais de notaire représentent généralement entre 7% et 8% du prix d'achat pour un bien ancien, et 2-3% pour un bien neuf.</p>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <h3>Combien de temps dure une transaction ?</h3>
+                        <span class="faq-toggle">+</span>
+                    </div>
+                    <div class="faq-answer">
+                        <p>Une transaction immobilière dure en moyenne 3 à 4 mois, de l'offre d'achat à la signature définitive chez le notaire.</p>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <h3>Quels documents faut-il pour vendre ?</h3>
+                        <span class="faq-toggle">+</span>
+                    </div>
+                    <div class="faq-answer">
+                        <p>Les principaux documents nécessaires sont : titre de propriété, diagnostics techniques, taxes foncières, etc. Nous vous accompagnons dans la préparation de tous ces documents.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Ajouter avant la section contact -->
+        <section id="temoignages">
+            <h2>Ce que nos clients disent</h2>
+            <div class="testimonials-container">
+                <div class="testimonial-slider">
+                    <div class="testimonial">
+                        <div class="testimonial-content">
+                            <i class="fas fa-quote-left quote-icon"></i>
+                            <p class="testimonial-text">"Service exceptionnel ! L'équipe d'ImmoConseil m'a accompagné tout au long de mon projet d'achat avec professionnalisme."</p>
+                            <div class="testimonial-info">
+                                <h4 class="testimonial-author">Marie D.</h4>
+                                <p class="testimonial-location">Paris</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="testimonial">
+                        <div class="testimonial-content">
+                            <i class="fas fa-quote-left quote-icon"></i>
+                            <p class="testimonial-text">"Grâce à leurs conseils avisés, j'ai pu vendre mon appartement au meilleur prix en seulement quelques semaines."</p>
+                            <div class="testimonial-info">
+                                <h4 class="testimonial-author">Thomas L.</h4>
+                                <p class="testimonial-location">Lyon</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="testimonial">
+                        <div class="testimonial-content">
+                            <i class="fas fa-quote-left quote-icon"></i>
+                            <p class="testimonial-text">"Une équipe à l'écoute et réactive. Je recommande vivement leurs services pour tout projet immobilier."</p>
+                            <div class="testimonial-info">
+                                <h4 class="testimonial-author">Sophie M.</h4>
+                                <p class="testimonial-location">Bordeaux</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="testimonial-dots"></div>
+            </div>
+        </section>
+
         <section id="contact">
             <h2>Contactez-nous</h2>
             <form id="contact-form">
@@ -165,6 +520,50 @@
         </div>
         <p>&copy; 2024 ImmoConseil. Tous droits réservés.</p>
     </footer>
+
+    <div id="termsModal" class="terms-modal">
+        <div class="terms-content">
+            <div class="terms-header">
+                <h2>Conditions d'utilisation</h2>
+                <span class="close-terms">&times;</span>
+            </div>
+            <div class="terms-body">
+                <h3>1. Acceptation des conditions</h3>
+                <p>En accédant et en utilisant ce site, vous acceptez d'être lié par ces conditions d'utilisation.</p>
+
+                <h3>2. Services proposés</h3>
+                <p>ImmoConseil propose des services de conseil en immobilier incluant :</p>
+                <ul>
+                    <li>Estimation de biens immobiliers</li>
+                    <li>Accompagnement à l'achat et à la vente</li>
+                    <li>Conseil en investissement immobilier</li>
+                    <li>Assistance pour le financement</li>
+                    <li>Services de home staging</li>
+                </ul>
+
+                <h3>3. Responsabilités</h3>
+                <p>ImmoConseil s'engage à fournir des services de qualité mais ne peut être tenu responsable :</p>
+                <ul>
+                    <li>Des fluctuations du marché immobilier</li>
+                    <li>Des décisions prises par les clients sur la base des conseils fournis</li>
+                    <li>Des informations incorrectes fournies par les clients</li>
+                </ul>
+
+                <h3>4. Confidentialité</h3>
+                <p>Nous nous engageons à protéger vos données personnelles conformément au RGPD. Pour plus d'informations, consultez notre politique de confidentialité.</p>
+
+                <h3>5. Propriété intellectuelle</h3>
+                <p>Tout le contenu du site est protégé par le droit d'auteur et ne peut être reproduit sans autorisation.</p>
+
+                <h3>6. Modification des conditions</h3>
+                <p>ImmoConseil se réserve le droit de modifier ces conditions à tout moment. Les utilisateurs seront informés des changements importants.</p>
+
+                <div class="terms-accept">
+                    <button id="acceptTerms" class="accept-button">J'accepte les conditions</button>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <script>
         document.getElementById('contact-form').addEventListener('submit', function(event) {
@@ -220,6 +619,173 @@
                 behavior: 'smooth'
             });
         });
+
+        // Animation au scroll pour les sections
+        function isElementInViewport(el) {
+            const rect = el.getBoundingClientRect();
+            return (
+                rect.top >= 0 &&
+                rect.left >= 0 &&
+                rect.bottom <= (window.innerHeight || document.documentElement.clientHeight) &&
+                rect.right <= (window.innerWidth || document.documentElement.clientWidth)
+            );
+        }
+
+        function handleScrollAnimations() {
+            // Animation des cartes de service
+            document.querySelectorAll('.service-card').forEach(card => {
+                if (isElementInViewport(card) && !card.classList.contains('animated')) {
+                    card.classList.add('animated');
+                    card.style.opacity = '1';
+                }
+            });
+
+            // Animation des sections
+            document.querySelectorAll('.services-grid, #contact form').forEach(element => {
+                if (isElementInViewport(element) && !element.classList.contains('animated')) {
+                    element.classList.add('animated');
+                    element.style.opacity = '1';
+                }
+            });
+        }
+
+        // Écouter le scroll pour déclencher les animations
+        window.addEventListener('scroll', handleScrollAnimations);
+        window.addEventListener('load', handleScrollAnimations);
+
+        // Animation des boutons au clic
+        document.querySelectorAll('.cta-button, .auth-button, .submit-button, button[type="submit"]').forEach(button => {
+            button.addEventListener('click', function(e) {
+                const ripple = document.createElement('div');
+                ripple.classList.add('ripple-effect');
+                this.appendChild(ripple);
+                setTimeout(() => ripple.remove(), 1000);
+            });
+        });
+
+        // Animation du logo
+        const logo = document.querySelector('.logo img');
+        logo.addEventListener('mouseover', function() {
+            this.style.animation = 'none';
+            setTimeout(() => this.style.animation = 'logoSpin 20s linear infinite', 10);
+        });
+
+        // Animation des icônes au hover
+        document.querySelectorAll('.service-card').forEach(card => {
+            card.addEventListener('mouseenter', function() {
+                const icon = this.querySelector('i');
+                icon.style.animation = 'rotateIcon 0.5s ease-out';
+            });
+            card.addEventListener('mouseleave', function() {
+                const icon = this.querySelector('i');
+                icon.style.animation = 'none';
+            });
+        });
+
+        // Animation du menu mobile
+        const menuToggle = document.querySelector('.menu-toggle');
+        const navMenu = document.querySelector('.nav-menu');
+        
+        menuToggle.addEventListener('click', function() {
+            navMenu.classList.toggle('show');
+            if (navMenu.classList.contains('show')) {
+                navMenu.style.animation = 'slideInMenu 0.3s ease-out forwards';
+            }
+        });
+
+        // Animation du footer
+        const footer = document.querySelector('footer');
+        footer.addEventListener('mouseover', function() {
+            this.classList.add('shine');
+        });
+
+        // Fonction pour afficher la modal des conditions
+        function showTerms() {
+            const modal = document.getElementById('termsModal');
+            modal.style.display = 'block';
+            setTimeout(() => {
+                modal.classList.add('show');
+            }, 10);
+        }
+
+        // Fonction pour fermer la modal
+        function closeTerms() {
+            const modal = document.getElementById('termsModal');
+            modal.classList.remove('show');
+            setTimeout(() => {
+                modal.style.display = 'none';
+            }, 300);
+        }
+
+        // Gestionnaires d'événements
+        document.querySelector('.close-terms').addEventListener('click', closeTerms);
+        document.getElementById('acceptTerms').addEventListener('click', closeTerms);
+
+        // Fermer la modal si on clique en dehors
+        window.addEventListener('click', function(event) {
+            const modal = document.getElementById('termsModal');
+            if (event.target === modal) {
+                closeTerms();
+            }
+        });
+
+        // Ajouter un lien dans le footer pour ouvrir les conditions
+        const footerLinks = document.createElement('p');
+        footerLinks.innerHTML = '<a href="#" id="showTerms">Conditions d\'utilisation</a>';
+        document.querySelector('footer').insertBefore(footerLinks, document.querySelector('footer p:last-child'));
+
+        document.getElementById('showTerms').addEventListener('click', function(e) {
+            e.preventDefault();
+            showTerms();
+        });
+
+        document.querySelectorAll('.faq-question').forEach(question => {
+            question.addEventListener('click', () => {
+                const faqItem = question.parentElement;
+                const isActive = faqItem.classList.contains('active');
+                
+                // Fermer toutes les réponses
+                document.querySelectorAll('.faq-item').forEach(item => {
+                    item.classList.remove('active');
+                });
+
+                // Ouvrir la réponse cliquée si elle n'était pas déjà ouverte
+                if (!isActive) {
+                    faqItem.classList.add('active');
+                }
+            });
+        });
+
+        // Ajouter ce script pour le slider des témoignages
+        let currentSlide = 0;
+        const testimonials = document.querySelectorAll('.testimonial');
+        const dotsContainer = document.querySelector('.testimonial-dots');
+
+        // Créer les points de navigation
+        testimonials.forEach((_, index) => {
+            const dot = document.createElement('div');
+            dot.classList.add('dot');
+            if (index === 0) dot.classList.add('active');
+            dot.addEventListener('click', () => goToSlide(index));
+            dotsContainer.appendChild(dot);
+        });
+
+        function goToSlide(index) {
+            const slider = document.querySelector('.testimonial-slider');
+            currentSlide = index;
+            slider.style.transform = `translateX(-${index * 100}%)`;
+            
+            // Mettre à jour les points
+            document.querySelectorAll('.dot').forEach((dot, i) => {
+                dot.classList.toggle('active', i === index);
+            });
+        }
+
+        // Défilement automatique
+        setInterval(() => {
+            currentSlide = (currentSlide + 1) % testimonials.length;
+            goToSlide(currentSlide);
+        }, 5000);
     </script>
 
     <!-- Chatbot -->

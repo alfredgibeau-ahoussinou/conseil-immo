@@ -69,8 +69,8 @@ body {
 
 .form-group input:focus {
     outline: none;
-    border-color: #3498db;
-    box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.2);
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 2px rgba(0, 100, 0, 0.2);
     animation: inputFocus 0.3s ease-out forwards;
 }
 
@@ -87,7 +87,7 @@ body {
 }
 
 .auth-button {
-    background-color: #3498db;
+    background-color: var(--primary-color);
     color: white;
     border: none;
     padding: 0.8rem;
@@ -104,7 +104,7 @@ body {
 }
 
 .auth-button:hover {
-    background-color: #2980b9;
+    background-color: var(--hover-color);
     transform: translateY(-2px);
 }
 
@@ -121,14 +121,14 @@ body {
 }
 
 .switch-form a {
-    color: #3498db;
+    color: var(--primary-color);
     text-decoration: none;
     font-weight: 600;
     transition: color 0.3s ease;
 }
 
 .switch-form a:hover {
-    color: #2980b9;
+    color: var(--hover-color);
     text-decoration: underline;
 }
 
@@ -650,4 +650,19 @@ body {
     100% {
         transform: scale(1);
     }
+}
+
+.login-button,
+.signup-button {
+    background-color: var(--primary-color);
+}
+
+.login-button:hover,
+.signup-button:hover {
+    background-color: var(--hover-color);
+}
+
+.form-control:focus {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 0.2rem rgba(34, 139, 34, 0.25);
 }
