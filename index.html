@@ -251,6 +251,60 @@
                 Suivez-nous sur Instagram
             </a>
         </div>
+        
+        <!-- Ajouter cette nouvelle section -->
+        <div class="legal-links">
+            <a href="#" class="terms-link" id="termsLink">Conditions d'utilisation</a>
+            <span class="separator">|</span>
+            <a href="#" class="privacy-link" id="privacyLink">Politique de confidentialité</a>
+        </div>
+
+        <div id="termsModal" class="modal">
+            <div class="modal-content">
+                <span class="close-modal">&times;</span>
+                <h2>Conditions d'utilisation</h2>
+                <div class="terms-content">
+                    <h3>1. Acceptation des conditions</h3>
+                    <p>En accédant à ce site, vous acceptez d'être lié par ces conditions d'utilisation, toutes les lois et réglementations applicables.</p>
+
+                    <h3>2. Services immobiliers</h3>
+                    <p>ImmoConseil propose des services de conseil en immobilier. Les informations fournies sur ce site sont à titre indicatif uniquement.</p>
+
+                    <h3>3. Propriété intellectuelle</h3>
+                    <p>Le contenu de ce site est protégé par les droits d'auteur et autres droits de propriété intellectuelle.</p>
+
+                    <h3>4. Responsabilité</h3>
+                    <p>ImmoConseil ne peut garantir l'exactitude complète des informations présentées sur le site.</p>
+
+                    <h3>5. Protection des données</h3>
+                    <p>Nous nous engageons à protéger vos données personnelles conformément au RGPD.</p>
+
+                    <h3>6. Modification des conditions</h3>
+                    <p>Nous nous réservons le droit de modifier ces conditions à tout moment.</p>
+                </div>
+            </div>
+        </div>
+
+        <div id="privacyModal" class="modal">
+            <div class="modal-content">
+                <span class="close-modal">&times;</span>
+                <h2>Politique de confidentialité</h2>
+                <div class="privacy-content">
+                    <h3>1. Collecte des données</h3>
+                    <p>Nous collectons uniquement les données nécessaires à nos services.</p>
+
+                    <h3>2. Utilisation des données</h3>
+                    <p>Vos données sont utilisées pour personnaliser votre expérience et améliorer nos services.</p>
+
+                    <h3>3. Protection des données</h3>
+                    <p>Nous mettons en œuvre des mesures de sécurité pour protéger vos informations.</p>
+
+                    <h3>4. Vos droits</h3>
+                    <p>Vous disposez d'un droit d'accès, de rectification et de suppression de vos données.</p>
+                </div>
+            </div>
+        </div>
+
         <p>&copy; 2024 ImmoConseil. Tous droits réservés.</p>
     </footer>
 
@@ -384,5 +438,166 @@
     </div>
 
     <script src="chatbot.js"></script>
+
+    <!-- Ajouter ce script avant la fermeture de la balise body -->
+    <script>
+        // Gestion des modals pour les conditions d'utilisation et la politique de confidentialité
+        document.addEventListener('DOMContentLoaded', function() {
+            const termsModal = document.getElementById('termsModal');
+            const privacyModal = document.getElementById('privacyModal');
+            const termsLink = document.getElementById('termsLink');
+            const privacyLink = document.getElementById('privacyLink');
+            const closeButtons = document.querySelectorAll('.close-modal');
+
+            termsLink.addEventListener('click', function(e) {
+                e.preventDefault();
+                termsModal.style.display = 'block';
+                document.body.style.overflow = 'hidden';
+            });
+
+            privacyLink.addEventListener('click', function(e) {
+                e.preventDefault();
+                privacyModal.style.display = 'block';
+                document.body.style.overflow = 'hidden';
+            });
+
+            closeButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    termsModal.style.display = 'none';
+                    privacyModal.style.display = 'none';
+                    document.body.style.overflow = 'auto';
+                });
+            });
+
+            window.addEventListener('click', function(e) {
+                if (e.target === termsModal) {
+                    termsModal.style.display = 'none';
+                    document.body.style.overflow = 'auto';
+                }
+                if (e.target === privacyModal) {
+                    privacyModal.style.display = 'none';
+                    document.body.style.overflow = 'auto';
+                }
+            });
+        });
+    </script>
+
+    <!-- Ajouter juste avant la fermeture du body -->
+    <div id="cookieConsent" class="cookie-banner">
+        <div class="cookie-content">
+            <p>Nous utilisons des cookies pour améliorer votre expérience sur notre site. En continuant à naviguer, vous acceptez notre utilisation des cookies.</p>
+            <div class="cookie-buttons">
+                <button id="acceptCookies" class="cookie-btn accept">Accepter</button>
+                <button id="customizeCookies" class="cookie-btn customize">Personnaliser</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="cookieSettings" class="cookie-modal">
+        <div class="cookie-modal-content">
+            <span class="close-cookie-modal">&times;</span>
+            <h2>Paramètres des cookies</h2>
+            <div class="cookie-options">
+                <div class="cookie-option">
+                    <label class="switch">
+                        <input type="checkbox" checked disabled>
+                        <span class="slider round"></span>
+                    </label>
+                    <div class="cookie-option-text">
+                        <h3>Cookies essentiels</h3>
+                        <p>Nécessaires au fonctionnement du site (toujours actifs)</p>
+                    </div>
+                </div>
+                <div class="cookie-option">
+                    <label class="switch">
+                        <input type="checkbox" id="analyticsCookies">
+                        <span class="slider round"></span>
+                    </label>
+                    <div class="cookie-option-text">
+                        <h3>Cookies analytiques</h3>
+                        <p>Nous aident à comprendre comment vous utilisez le site</p>
+                    </div>
+                </div>
+                <div class="cookie-option">
+                    <label class="switch">
+                        <input type="checkbox" id="marketingCookies">
+                        <span class="slider round"></span>
+                    </label>
+                    <div class="cookie-option-text">
+                        <h3>Cookies marketing</h3>
+                        <p>Utilisés pour la publicité ciblée</p>
+                    </div>
+                </div>
+            </div>
+            <button id="saveCookiePreferences" class="cookie-save-btn">Enregistrer mes préférences</button>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const cookieConsent = document.getElementById('cookieConsent');
+            const cookieSettings = document.getElementById('cookieSettings');
+            const acceptBtn = document.getElementById('acceptCookies');
+            const customizeBtn = document.getElementById('customizeCookies');
+            const closeModal = document.querySelector('.close-cookie-modal');
+            const savePreferences = document.getElementById('saveCookiePreferences');
+
+            // Vérifier si les préférences de cookies existent déjà
+            if (!localStorage.getItem('cookiePreferences')) {
+                setTimeout(() => {
+                    cookieConsent.classList.add('show');
+                }, 1000);
+            }
+
+            acceptBtn.addEventListener('click', function() {
+                acceptAllCookies();
+                cookieConsent.classList.remove('show');
+            });
+
+            customizeBtn.addEventListener('click', function() {
+                cookieSettings.style.display = 'block';
+            });
+
+            closeModal.addEventListener('click', function() {
+                cookieSettings.style.display = 'none';
+            });
+
+            savePreferences.addEventListener('click', function() {
+                saveCookiePreferences();
+                cookieSettings.style.display = 'none';
+                cookieConsent.classList.remove('show');
+            });
+
+            function acceptAllCookies() {
+                const preferences = {
+                    essential: true,
+                    analytics: true,
+                    marketing: true,
+                    timestamp: new Date().getTime()
+                };
+                localStorage.setItem('cookiePreferences', JSON.stringify(preferences));
+            }
+
+            function saveCookiePreferences() {
+                const analytics = document.getElementById('analyticsCookies').checked;
+                const marketing = document.getElementById('marketingCookies').checked;
+                
+                const preferences = {
+                    essential: true,
+                    analytics: analytics,
+                    marketing: marketing,
+                    timestamp: new Date().getTime()
+                };
+                localStorage.setItem('cookiePreferences', JSON.stringify(preferences));
+            }
+
+            // Fermer la modal en cliquant en dehors
+            window.addEventListener('click', function(e) {
+                if (e.target === cookieSettings) {
+                    cookieSettings.style.display = 'none';
+                }
+            });
+        });
+    </script>
 </body>
 </html>
